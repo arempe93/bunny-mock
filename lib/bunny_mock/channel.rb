@@ -5,6 +5,21 @@ module BunnyMock
 		# API
 		#
 
+		# @return [Integer] Channel identifier
+		attr_reader :id
+
+		# @return [BunnyMock::Session] Session this channel belongs to
+		attr_reader :connection
+
+		# @return [Symbol] Current channel state
+		attr_reader :status
+
+		# @return [Hash<String, BunnyMock::Exchange>] Exchanges created by this channel
+		attr_reader :exchanges
+
+		# @return [Hash<String, BunnyMock::Queue>] Queues created by this channel
+		attr_reader :queues
+
 		# Create a new {BunnyMock::Channel} instance
 		#
 		# @param [BunnyMock::Session] connection Mocked session instance
@@ -18,6 +33,10 @@ module BunnyMock
 
 			# store connection information
 			@connection = connection
+
+			# initialize exchange and queue storage
+			@exchanges = Hash.new
+			@queues = Hash.new
 
 			# set status to opening
 			@status = :opening
@@ -78,7 +97,10 @@ module BunnyMock
 		# @return [BunnyMock::Exchange] Mocked exchange instance
 		# @api public
 		def exchange(name, opts = {})
-			Exchange.new self, opts.fetch(:type, :direct), name, opts
+
+			xchg = find_exchange(name) || Exchange.new(self, opts.fetch(:type, :direct), name, opts)
+
+			register_exchange xchg
 		end
 
 		# Mocks a fanout exchange
@@ -153,8 +175,65 @@ module BunnyMock
 
 		# @group Queue API
 
+		# Create a new {BunnyMock::Queue} instance, or find in channel cache
+		#
+		# @param [String] name Name of queue
+		# @param [Hash] opts Queue creation options
+		#
+		# @return [BunnyMock::Queue] Queue that was mocked or looked up
+		# @api public
+		def queue(name = AMQP::Protocol::EMPTY_STRING, opts = {})
 
+			queue = find_queue(name) || BunnyMock::Queue.new(self, name, opts)
+
+			register_queue queue
+		end
+
+		# Create a new {BunnyMock::Queue} instance with no name
+		#
+		# @param [Hash] opts Queue creation options
+		#
+		# @return [BunnyMock::Queue] Queue that was mocked or looked up
+		# @see #queue
+		# @api public
+		def temporary_queue(opts = {})
+
+			queue '', opts.merge(exclusive: true)
+		end
 
 		# @endgroup
+
+		#
+		# Implementation
+		#
+
+		# @private
+		def find_queue(name)
+			@queues[name]
+		end
+
+		# @private
+		def register_queue(queue)
+			@queues[queue.name] = queue
+		end
+
+		# @private
+		def deregister_queue(queue)
+			@queues.delete queue.name
+		end
+
+		def find_exchange(name)
+			@exchanges[name]
+		end
+
+		# @private
+		def register_exchange(xchg)
+			@exchanges[xchg.name] = xchg
+		end
+
+		# @private
+		def deregister_exchange(xchg)
+			@exchanges.delete xchg.name
+		end
 	end
 end
