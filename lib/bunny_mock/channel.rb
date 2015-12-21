@@ -222,6 +222,33 @@ module BunnyMock
 			@queues.delete queue.name
 		end
 
+		# @private
+		def queue_bind(q, xchg, opts = {})
+
+			queue = @queues[q] || queue(q)
+			exchange = @exchanges[xchg] || exchange(xchg)
+
+			exchange.queue_bind queue, opts.fetch(:routing_key, q)
+		end
+
+		# @private
+		def queue_unbind(q, xchg)
+
+			queue = @queues[q] || queue(q)
+			exchange = @exchanges[xchg] || exchange(xchg)
+
+			exchange.queue_unbind queue
+		end
+
+		# @private
+		def queue_bound_to?(q, xchg)
+
+			queue = @queues[q] || queue(q)
+			exchange = @exchanges[xchg] || exchange(xchg)
+
+			exchange.bound_to_queue? queue
+		end
+
 		def find_exchange(name)
 			@exchanges[name]
 		end
