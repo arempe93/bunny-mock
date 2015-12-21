@@ -5,14 +5,13 @@ module BunnyMock
 		# API
 		#
 
-		# Create a new [BunnyMock::Channel] instance
+		# Create a new {BunnyMock::Channel} instance
 		#
-		# @param [BunnyMock::Session] Mocked session instance
-		# @param [Integer] Channel identifier
-		# @param [Integer] Size of work pool (insignificant)
+		# @param [BunnyMock::Session] connection Mocked session instance
+		# @param [Integer] id Channel identifier
 		#
 		# @api public
-		def initialize(connection = nil, id = nil, work_pool = 1)
+		def initialize(connection = nil, id = nil)
 
 			# store channel id
 			@id = id
@@ -71,12 +70,12 @@ module BunnyMock
 		# @param [String] name Exchange name
 		# @param [Hash] opts Exchange parameters
 		#
-		# @option opts [Symbol,String] :type
+		# @option opts [Symbol,String] :type Type of exchange
 		# @option opts [Boolean] :durable
 		# @option opts [Boolean] :auto_delete
 		# @option opts [Hash] :arguments
 		#
-		# @return [BunnyMock::Exchange] mocked exchange instance
+		# @return [BunnyMock::Exchange] Mocked exchange instance
 		# @api public
 		def exchange(name, opts = {})
 			Exchange.new self, opts.fetch(:type, :direct), name, opts
@@ -91,7 +90,7 @@ module BunnyMock
 		# @option opts [Boolean] :auto_delete
 		# @option opts [Hash] :arguments
 		#
-		# @return [BunnyMock::Exchange] mocked exchange instance
+		# @return [BunnyMock::Exchange] Mocked exchange instance
 		# @api public
 		def fanout(name, opts = {})
 			self.exchange name, opts.merge(type: :fanout)
@@ -106,7 +105,7 @@ module BunnyMock
 		# @option opts [Boolean] :auto_delete
 		# @option opts [Hash] :arguments
 		#
-		# @return [BunnyMock::Exchange] mocked exchange instance
+		# @return [BunnyMock::Exchange] Mocked exchange instance
 		# @api public
 		def direct(name, opts = {})
 			self.exchange name, opts.merge(type: :direct)
@@ -121,7 +120,7 @@ module BunnyMock
 		# @option opts [Boolean] :auto_delete
 		# @option opts [Hash] :arguments
 		#
-		# @return [BunnyMock::Exchange] mocked exchange instance
+		# @return [BunnyMock::Exchange] Mocked exchange instance
 		# @api public
 		def topic(name, opts = {})
 			self.exchange name, opts.merge(type: :topic)
@@ -136,7 +135,7 @@ module BunnyMock
 		# @option opts [Boolean] :auto_delete
 		# @option opts [Hash] :arguments
 		#
-		# @return [BunnyMock::Exchange] mocked exchange instance
+		# @return [BunnyMock::Exchange] Mocked exchange instance
 		# @api public
 		def header(name, opts = {})
 			self.exchange name, opts.merge(type: :header)
@@ -144,7 +143,7 @@ module BunnyMock
 
 		# Mocks RabbitMQ default exchange
 		#
-		# @return [BunnyMock::Exchange] mocked default exchange instance
+		# @return [BunnyMock::Exchange] Mocked default exchange instance
 		# @api public
 		def default_exchange
 			self.direct AMQ::PROTOCOL::EMPTY_STRING, no_declare: true
@@ -154,7 +153,7 @@ module BunnyMock
 
 		# @group Queue API
 
-		
+
 
 		# @endgroup
 	end

@@ -6,7 +6,7 @@ module BunnyMock
 		# API
 		#
 
-		# Creates a new [BunnyMock::Session] instance
+		# Creates a new {BunnyMock::Session} instance
 		#
 		# @api public
 		def initialize(*args)
@@ -17,35 +17,42 @@ module BunnyMock
 
 		# Sets status to connected
 		#
+		# @return [BunnyMock::Session] self
 		# @api public
 		def start
 
-			# set status to connected
 			@status = :connected
+
+			self
 		end
 
 		# Sets status to closed
 		#
+		# @return [BunnyMock::Session] self
 		# @api public
 		def stop
 
-			# set status to closed
 			@status = :closed
+
+			self
 		end
 		alias close stop
 
 		# Tests if connection is available
 		#
-		# @return [Boolean]
+		# @return [Boolean] true if status is connected, false otherwise
 		# @api public
 		def open?
 
 			@status == :connected
 		end
 
-		# Creates a new [BunnyMock::Channel] instance
+		# Creates a new {BunnyMock::Channel} instance
 		#
-		# @return [BunnyMock::Channel]
+		# @param [Integer] n Channel identifier
+		# @param [Integer] pool_size Work pool size (insignificant)
+		#
+		# @return [BunnyMock::Channel] Channel instance
 		# @api public
 		def create_channel(n = nil, pool_size = 1)
 

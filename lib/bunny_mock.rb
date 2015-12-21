@@ -4,7 +4,7 @@ module BunnyMock
 
 	# Instantiate a new mock Bunny session
 	#
-	# @return [BunnyMock::Session]
+	# @return [BunnyMock::Session] Session instance
 	# @api public
 	def self.new(*args)
 
