@@ -14,6 +14,7 @@ module BunnyMock
 		# @return [Hash] Creation options
 		attr_reader :opts
 
+		##
 		# Create a new [BunnyMock::Queue] instance
 		#
 		# @param [BunnyMock::Channel] channel Channel this queue will use
@@ -30,7 +31,7 @@ module BunnyMock
 			@opts		= opts
 		end
 
-
+		##
 		# Bind this queue to an exchange
 		#
 		# @param [BunnyMock::Exchange,String] exchange Exchange to bind to
@@ -42,41 +43,70 @@ module BunnyMock
 		#
 		def bind(exchange, opts = {})
 
-			xchg = exchange.respond_to?(:name) ? exchange.name : exchange
+			if exchange.respond_to?(:add_route)
 
-			@channel.queue_bind @name, xchg, opts
+				# we can do the binding ourselves
+				exchange.add_route opts.fetch(:routing_key, @name), self
+
+			else
+
+				# we need the channel to lookup the exchange
+				@channel.queue_bind self, opts.fetch(:routing_key, @name), exchange
+			end
 		end
 
+		##
 		# Unbind this queue from an exchange
 		#
 		# @param [BunnyMock::Exchange,String] exchange Exchange to unbind from
-		# @param [Hash] opt Binding properties (insignificant)
+		# @param [Hash] opt Binding properties
+		#
+		# @option opts [String] :routing_key Custom routing key
 		#
 		# @api public
 		#
 		def unbind(exchange, opts = {})
 
-			xchg = exchange.respond_to?(:name) ? exchange.name : exchange
+			if exchange.respond_to?(:remove_route)
 
-			@channel.queue_unbind @name, xchg
+				# we can do the unbinding ourselves
+				exchange.remove_route opts.fetch(:routing_key, @name)
+
+			else
+
+				# we need the channel to lookup the exchange
+				@channel.queue_unbind opts.fetch(:routing_key, @name), exchange
+			end
 		end
 
+		##
 		# Check if this queue is bound to the exchange
 		#
 		# @param [BunnyMock::Exchange,String] exchange Exchange to test
+		# @param [Hash] opts Binding properties
+		#
+		# @option opts [String] :routing_key Custom routing key
 		#
 		# @return [Boolean] true if this queue is bound to the given exchange, false otherwise
 		# @api public
 		#
 		def bound_to?(exchange)
 
-			xchg = exchange.respond_to?(:name) ? exchange.name : exchange
+			if exchange.respond_to?(:has_binding?)
 
-			@channel.queue_bound_to? @name, xchg
+				# we can do the check ourselves
+				exchange.has_binding? opts.fetch(:routing_key, @name)
+
+			else
+
+				# we need the channel to lookup the exchange
+				@channel.xchg_has_binding? opts.fetch(:routing_key, @name), exchange
+			end
 		end
 
 		# @group Messages API
 
+		##
 		# Count of messages in queue
 		#
 		# @return [Integer] Number of messages in queue
@@ -86,6 +116,7 @@ module BunnyMock
 			@messages.count
 		end
 
+		##
 		# Get oldest message in queue
 		#
 		# @return [Hash] Message data
@@ -95,6 +126,7 @@ module BunnyMock
 			@messages.pop
 		end
 
+		##
 		# Get all messages in queue
 		#
 		# @return [Array] All messages
@@ -111,7 +143,7 @@ module BunnyMock
 		#
 
 		# @private
-		def send(payload, props = {})
+		def publish(payload, props = {})
 			@messages << { message: payload, properties: props }
 		end
 	end

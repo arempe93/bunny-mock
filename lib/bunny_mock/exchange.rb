@@ -12,10 +12,11 @@ module BunnyMock
 		# @option opts [Boolean] :auto_delete (false) Should this exchange be automatically deleted when it is no longer used?
 		# @option opts [Boolean] :arguments ({}) Additional optional arguments (typically used by RabbitMQ extensions and plugins)
 		#
+		# @return [BunnyMock::Exchange] A new exchange
 		# @see BunnyMock::Channel#exchange
 		# @api public
 		#
-		def self.new(channel, name = '', opts = {})
+		def self.declare(channel, name = '', opts = {})
 
 			# get requested type
 			type = opts.fetch :type, :direct
@@ -153,7 +154,7 @@ module BunnyMock
 			if exchange.respond_to?(:add_route)
 
 				# we can do the binding ourselves
-				exchange.add_route opts.fetch(:routing_key, @name), exchange
+				exchange.add_route opts.fetch(:routing_key, @name), self
 
 			else
 
@@ -182,7 +183,7 @@ module BunnyMock
 			else
 
 				# we need the channel to look up the exchange
-				@channel.xchg_unbind self, opts.fetch(:routing_key, @name), exchange
+				@channel.xchg_unbind opts.fetch(:routing_key, @name), exchange
 			end
 		end
 
@@ -246,6 +247,7 @@ module BunnyMock
 
 		# @private
 		def add_route(key, xchg_or_queue)
+			@routes[key] = xchg_or_queue
 		end
 
 		# @private

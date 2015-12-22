@@ -102,7 +102,7 @@ module BunnyMock
 		# @api public
 		def exchange(name, opts = {})
 
-			xchg = find_exchange(name) || Exchange.new(self, opts.fetch(:type, :direct), name, opts)
+			xchg = find_exchange(name) || Exchange.declare(self, name, opts)
 
 			register_exchange xchg
 		end
@@ -194,7 +194,7 @@ module BunnyMock
 		# @api public
 		def queue(name = '', opts = {})
 
-			queue = find_queue(name) || BunnyMock::Queue.new(self, name, opts)
+			queue = find_queue(name) || Queue.new(self, name, opts)
 
 			register_queue queue
 		end
@@ -234,30 +234,27 @@ module BunnyMock
 		end
 
 		# @private
-		def queue_bind(q, xchg, opts = {})
+		def queue_bind(queue, key, xchg)
 
-			queue = @queues[q] || queue(q)
 			exchange = @exchanges[xchg] || exchange(xchg)
 
-			exchange.queue_bind queue, opts.fetch(:routing_key, q)
+			exchange.add_route key, queue
 		end
 
 		# @private
-		def queue_unbind(q, xchg)
+		def queue_unbind(key, xchg)
 
-			queue = @queues[q] || queue(q)
 			exchange = @exchanges[xchg] || exchange(xchg)
 
-			exchange.queue_unbind queue
+			exchange.remove_route key
 		end
 
 		# @private
-		def queue_bound_to?(q, xchg)
+		def xchg_has_binding?(key, xchg)
 
-			queue = @queues[q] || queue(q)
 			exchange = @exchanges[xchg] || exchange(xchg)
 
-			exchange.bound_to_queue? queue
+			exchange.has_binding? key
 		end
 
 		# @private
@@ -284,15 +281,11 @@ module BunnyMock
 		end
 
 		# @private
-		def xchg_unbind(receiver, routing_key, name)
+		def xchg_unbind(routing_key, name)
 
 			source = @exchanges[name] || exchange(name)
 
-			source.remove_route routing_key, receiver
-		end
-
-		# @private
-		def xchg_bound_to?(receiver, routing_key, name)
+			source.remove_route routing_key
 		end
 	end
 end

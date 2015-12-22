@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 require 'base64'
-require File.expand_path("../lib/bunny-mock/version", __FILE__)
+require File.expand_path("../lib/bunny_mock/version", __FILE__)
 
 Gem::Specification.new do |s|
 	s.name = 'bunny-mock'

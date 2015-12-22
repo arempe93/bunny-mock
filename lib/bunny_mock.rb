@@ -1,7 +1,21 @@
+require 'bunny_mock/session'
+require 'bunny_mock/channel'
+require 'bunny_mock/exchange'
+require 'bunny_mock/queue'
+
+require 'bunny_mock/exchanges/direct'
+require 'bunny_mock/exchanges/topic'
+require 'bunny_mock/exchanges/fanout'
+require 'bunny_mock/exchanges/headers'
+
+##
 # A mock RabbitMQ client based on Bunny
+#
 # @see https://github.com/ruby-amq/bunny
+#
 module BunnyMock
 
+	##
 	# Instantiate a new mock Bunny session
 	#
 	# @return [BunnyMock::Session] Session instance
