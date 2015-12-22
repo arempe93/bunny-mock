@@ -13,6 +13,7 @@ module BunnyMock
 		# @option opts [Boolean] :arguments ({}) Additional optional arguments (typically used by RabbitMQ extensions and plugins)
 		#
 		# @see BunnyMock::Channel#exchange
+		# @api public
 		#
 		def self.new(channel, name = '', opts = {})
 
@@ -20,7 +21,7 @@ module BunnyMock
 			type = opts.fetch :type, :direct
 
 			# get needed class type
-			klazz = BunnyMock::Exchange.const_get type.to_s.capitalize
+			klazz = BunnyMock::Exchanges.const_get type.to_s.capitalize
 
 			# create exchange of desired type
 			klazz.new channel, name, type, opts
@@ -113,11 +114,17 @@ module BunnyMock
 		# @option opts [String] :app_id Optional application ID
 		#
 		# @return [BunnyMock::Exchange] self
+		# @see {BunnyMock::Exchanges::Direct#deliver}
+		# @see {BunnyMock::Exchanges::Topic#deliver}
+		# @see {BunnyMock::Exchanges::Fanout#deliver}
+		# @see {BunnyMock::Exchanges::Headers#deliver}
 		# @api public
 		def publish(payload, opts = {})
 
 			# handle message sending, varies by type
-			send_message payload, opts, opts.fetch(:routing_key, '')
+			deliver payload, opts, opts.fetch(:routing_key, '')
+
+			self
 		end
 
 		##
@@ -138,7 +145,7 @@ module BunnyMock
 		#
 		# @option opts [String] :routing_key Custom routing key
 		#
-		# @return [Bunny::Exchange] self
+		# @return [BunnyMock::Exchange] self
 		# @api public
 		#
 		def bind(exchange, opts = {})
@@ -221,6 +228,18 @@ module BunnyMock
 			@routes.key? opts.fetch(:routing_key, route)
 		end
 
+		##
+		# Deliver a message to routes
+		#
+		# @see {BunnyMock::Exchanges::Direct#deliver}
+		# @see {BunnyMock::Exchanges::Topic#deliver}
+		# @see {BunnyMock::Exchanges::Fanout#deliver}
+		# @see {BunnyMock::Exchanges::Headers#deliver}
+		# @api public
+		def deliver(payload, opts, key)
+			# noOp
+		end
+
 		#
 		# Implementation
 		#
@@ -233,10 +252,5 @@ module BunnyMock
 		def remove_route(key)
 			@routes.delete key
 		end
-
-		class Direct;	end
-		class Topic;	end
-		class Fanout;	end
-		class Headers;	end
 	end
 end
