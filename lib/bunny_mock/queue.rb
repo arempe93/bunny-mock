@@ -25,9 +25,9 @@ module BunnyMock
 		def initialize(channel, name = AMQP::Protocol::EMPTY_STRING, opts = {})
 
 			# Store creation information
-			@channel = channel
-			@name = name
-			@opts = opts
+			@channel	= channel
+			@name		= name
+			@opts		= opts
 		end
 
 
@@ -42,7 +42,7 @@ module BunnyMock
 		#
 		def bind(exchange, opts = {})
 
-			xchg = exchange.respond_to?(:name) ? xchg.name : xchg
+			xchg = exchange.respond_to?(:name) ? exchange.name : exchange
 
 			@channel.queue_bind @name, xchg, opts
 		end
@@ -56,7 +56,7 @@ module BunnyMock
 		#
 		def unbind(exchange, opts = {})
 
-			xchg = exchange.respond_to?(:name) ? xchg.name : xchg
+			xchg = exchange.respond_to?(:name) ? exchange.name : exchange
 
 			@channel.queue_unbind @name, xchg
 		end
@@ -70,7 +70,7 @@ module BunnyMock
 		#
 		def bound_to?(exchange)
 
-			xchg = exchange.respond_to?(:name) ? xchg.name : xchg
+			xchg = exchange.respond_to?(:name) ? exchange.name : exchange
 
 			@channel.queue_bound_to? @name, xchg
 		end

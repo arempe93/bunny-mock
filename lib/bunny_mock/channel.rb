@@ -20,6 +20,7 @@ module BunnyMock
 		# @return [Hash<String, BunnyMock::Queue>] Queues created by this channel
 		attr_reader :queues
 
+		##
 		# Create a new {BunnyMock::Channel} instance
 		#
 		# @param [BunnyMock::Session] connection Mocked session instance
@@ -29,39 +30,17 @@ module BunnyMock
 		def initialize(connection = nil, id = nil)
 
 			# store channel id
-			@id = id
+			@id				= id
 
 			# store connection information
-			@connection = connection
+			@connection		= connection
 
 			# initialize exchange and queue storage
-			@exchanges = Hash.new
-			@queues = Hash.new
+			@exchanges		= Hash.new
+			@queues			= Hash.new
 
 			# set status to opening
-			@status = :opening
-		end
-
-		# Sets status to open
-		#
-		# @return [BunnyMock::Channel] self
-		# @api public
-		def open
-
-			@status = :open
-
-			self
-		end
-
-		# Sets status to closed
-		#
-		# @return [BunnyMock::Channel] self
-		# @api public
-		def close
-
-			@status = :closed
-
-			self
+			@status			= :opening
 		end
 
 		# @return [Boolean] true if status is open, false otherwise
@@ -76,6 +55,30 @@ module BunnyMock
 			@status == :closed
 		end
 
+		##
+		# Sets status to open
+		#
+		# @return [BunnyMock::Channel] self
+		# @api public
+		def open
+
+			@status = :open
+
+			self
+		end
+
+		##
+		# Sets status to closed
+		#
+		# @return [BunnyMock::Channel] self
+		# @api public
+		def close
+
+			@status = :closed
+
+			self
+		end
+
 		# @return [String] object representation
 		def to_s
 			"#<#{self.class.name}:#{self.object_id} @id=#{@id} @open=#{open?}>"
@@ -84,6 +87,7 @@ module BunnyMock
 
 		# @group Exchange API
 
+		##
 		# Mocks an exchange
 		#
 		# @param [String] name Exchange name
@@ -103,6 +107,7 @@ module BunnyMock
 			register_exchange xchg
 		end
 
+		##
 		# Mocks a fanout exchange
 		#
 		# @param [String] name Exchange name
@@ -118,6 +123,7 @@ module BunnyMock
 			self.exchange name, opts.merge(type: :fanout)
 		end
 
+		##
 		# Mocks a direct exchange
 		#
 		# @param [String] name Exchange name
@@ -133,6 +139,7 @@ module BunnyMock
 			self.exchange name, opts.merge(type: :direct)
 		end
 
+		##
 		# Mocks a topic exchange
 		#
 		# @param [String] name Exchange name
@@ -148,6 +155,7 @@ module BunnyMock
 			self.exchange name, opts.merge(type: :topic)
 		end
 
+		##
 		# Mocks a headers exchange
 		#
 		# @param [String] name Exchange name
@@ -163,18 +171,20 @@ module BunnyMock
 			self.exchange name, opts.merge(type: :header)
 		end
 
+		##
 		# Mocks RabbitMQ default exchange
 		#
 		# @return [BunnyMock::Exchange] Mocked default exchange instance
 		# @api public
 		def default_exchange
-			self.direct AMQ::PROTOCOL::EMPTY_STRING, no_declare: true
+			self.direct '', no_declare: true
 		end
 
 		# @endgroup
 
 		# @group Queue API
 
+		##
 		# Create a new {BunnyMock::Queue} instance, or find in channel cache
 		#
 		# @param [String] name Name of queue
@@ -182,13 +192,14 @@ module BunnyMock
 		#
 		# @return [BunnyMock::Queue] Queue that was mocked or looked up
 		# @api public
-		def queue(name = AMQP::Protocol::EMPTY_STRING, opts = {})
+		def queue(name = '', opts = {})
 
 			queue = find_queue(name) || BunnyMock::Queue.new(self, name, opts)
 
 			register_queue queue
 		end
 
+		##
 		# Create a new {BunnyMock::Queue} instance with no name
 		#
 		# @param [Hash] opts Queue creation options
@@ -249,6 +260,7 @@ module BunnyMock
 			exchange.bound_to_queue? queue
 		end
 
+		# @private
 		def find_exchange(name)
 			@exchanges[name]
 		end
@@ -261,6 +273,26 @@ module BunnyMock
 		# @private
 		def deregister_exchange(xchg)
 			@exchanges.delete xchg.name
+		end
+
+		# @private
+		def xchg_bind(source, routing_key, name)
+
+			receiver = @exchanges[name] || exchange(name)
+
+			source.add_route routing_key, receiver
+		end
+
+		# @private
+		def xchg_unbind(receiver, routing_key, name)
+
+			source = @exchanges[name] || exchange(name)
+
+			source.remove_route routing_key, receiver
+		end
+
+		# @private
+		def xchg_bound_to?(receiver, routing_key, name)
 		end
 	end
 end
