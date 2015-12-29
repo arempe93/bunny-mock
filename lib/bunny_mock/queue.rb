@@ -31,6 +31,41 @@ module BunnyMock
 			@opts		= opts
 		end
 
+		# @group Bunny API
+
+		##
+		# Publish a message
+		#
+		# @param [Object] payload Message payload
+		# @param [Hash] opts Message properties
+		#
+		# @option opts [String] :routing_key Routing key
+		# @option opts [Boolean] :persistent Should the message be persisted to disk?
+		# @option opts [Boolean] :mandatory Should the message be returned if it cannot be routed to any queue?
+		# @option opts [Integer] :timestamp A timestamp associated with this message
+		# @option opts [Integer] :expiration Expiration time after which the message will be deleted
+		# @option opts [String] :type Message type, e.g. what type of event or command this message represents. Can be any string
+		# @option opts [String] :reply_to Queue name other apps should send the response to
+		# @option opts [String] :content_type Message content type (e.g. application/json)
+		# @option opts [String] :content_encoding Message content encoding (e.g. gzip)
+		# @option opts [String] :correlation_id Message correlated to this one, e.g. what request this message is a reply for
+		# @option opts [Integer] :priority Message priority, 0 to 9. Not used by RabbitMQ, only applications
+		# @option opts [String] :message_id Any message identifier
+		# @option opts [String] :user_id Optional user ID. Verified by RabbitMQ against the actual connection username
+		# @option opts [String] :app_id Optional application ID
+		#
+		# @return [BunnyMock::Queue] self
+		# @see {BunnyMock::Exchange#publish}
+		# @api public
+		#
+		def publish(payload, opts = {})
+
+			# add to messages
+			@messages << { message: payload, options: opts }
+
+			self
+		end
+
 		##
 		# Bind this queue to an exchange
 		#
@@ -79,6 +114,8 @@ module BunnyMock
 			end
 		end
 
+		# @endgroup
+
 		##
 		# Check if this queue is bound to the exchange
 		#
@@ -103,8 +140,6 @@ module BunnyMock
 				@channel.xchg_has_binding? opts.fetch(:routing_key, @name), exchange
 			end
 		end
-
-		# @group Messages API
 
 		##
 		# Count of messages in queue
@@ -135,8 +170,6 @@ module BunnyMock
 		def all
 			@messages
 		end
-
-		# @endgroup
 
 		#
 		# Implementation

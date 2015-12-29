@@ -120,6 +120,7 @@ module BunnyMock
 		# @see {BunnyMock::Exchanges::Fanout#deliver}
 		# @see {BunnyMock::Exchanges::Headers#deliver}
 		# @api public
+		#
 		def publish(payload, opts = {})
 
 			# handle message sending, varies by type
@@ -134,6 +135,7 @@ module BunnyMock
 		# @param [Hash] opts Options (insignificant)
 		#
 		# @api public
+		#
 		def delete(opts = {})
 			@deleted = true
 		end
@@ -237,6 +239,7 @@ module BunnyMock
 		# @see {BunnyMock::Exchanges::Fanout#deliver}
 		# @see {BunnyMock::Exchanges::Headers#deliver}
 		# @api public
+		#
 		def deliver(payload, opts, key)
 			# noOp
 		end

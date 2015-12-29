@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'amq-protocol'
+
 group :development do
 
 	gem 'yard'
