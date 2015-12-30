@@ -199,7 +199,7 @@ module BunnyMock
 		# @param [BunnyMock::Exchange,String] exchange Exchange to check
 		# @param [Hash] opts Binding properties
 		#
-		# @options opts [String] :routing_key Routing key from binding
+		# @option opts [String] :routing_key Routing key from binding
 		#
 		# @return [Boolean] true if this exchange is bound to the given exchange, false otherwise
 		# @api public
@@ -221,7 +221,7 @@ module BunnyMock
 		##
 		# Check if a queue is bound to this exchange
 		#
-		# @param [BunnyMock::Queue,String] queue Queue to check
+		# @param [BunnyMock::Queue,String] exchange_or_queue Exchange or queue to check
 		# @param [Hash] opts Binding properties
 		#
 		# @option opts [String] :routing_key Custom routing key

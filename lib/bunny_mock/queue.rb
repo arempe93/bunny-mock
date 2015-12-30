@@ -75,7 +75,7 @@ module BunnyMock
 		# Bind this queue to an exchange
 		#
 		# @param [BunnyMock::Exchange,String] exchange Exchange to bind to
-		# @param [Hash] opt Binding properties
+		# @param [Hash] opts Binding properties
 		#
 		# @option opts [String] :routing_key Custom routing key
 		#
@@ -101,7 +101,7 @@ module BunnyMock
 		# Unbind this queue from an exchange
 		#
 		# @param [BunnyMock::Exchange,String] exchange Exchange to unbind from
-		# @param [Hash] opt Binding properties
+		# @param [Hash] opts Binding properties
 		#
 		# @option opts [String] :routing_key Custom routing key
 		#
