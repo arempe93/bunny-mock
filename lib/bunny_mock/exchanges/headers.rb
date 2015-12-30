@@ -1,6 +1,6 @@
 module BunnyMock
 	module Exchanges
-		class Headers < BunnyMock::Exchange
+		class Header < BunnyMock::Exchange
 
 			# @private
 			# @return [Regexp] Any match

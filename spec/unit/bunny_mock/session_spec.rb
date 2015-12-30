@@ -32,11 +32,22 @@ describe BunnyMock::Session do
 
 	context '#open?' do
 
-		it 'should set status to closed' do
+		it 'should return true if status is open' do
 
 			@session.start
 
 			expect(@session.open?).to be_truthy
+		end
+
+		it 'should return false otherwise' do
+
+			# not_connected
+			expect(@session.open?).to be_falsey
+
+			@session.stop
+
+			# closed
+			expect(@session.open?).to be_falsey
 		end
 	end
 

@@ -27,6 +27,7 @@ module BunnyMock
 		# @param [Integer] id Channel identifier
 		#
 		# @api public
+		#
 		def initialize(connection = nil, id = nil)
 
 			# store channel id
@@ -60,6 +61,7 @@ module BunnyMock
 		#
 		# @return [BunnyMock::Channel] self
 		# @api public
+		#
 		def open
 
 			@status = :open
@@ -72,6 +74,7 @@ module BunnyMock
 		#
 		# @return [BunnyMock::Channel] self
 		# @api public
+		#
 		def close
 
 			@status = :closed
@@ -100,6 +103,7 @@ module BunnyMock
 		#
 		# @return [BunnyMock::Exchange] Mocked exchange instance
 		# @api public
+		#
 		def exchange(name, opts = {})
 
 			xchg = find_exchange(name) || Exchange.declare(self, name, opts)
@@ -119,6 +123,7 @@ module BunnyMock
 		#
 		# @return [BunnyMock::Exchange] Mocked exchange instance
 		# @api public
+		#
 		def fanout(name, opts = {})
 			self.exchange name, opts.merge(type: :fanout)
 		end
@@ -135,6 +140,7 @@ module BunnyMock
 		#
 		# @return [BunnyMock::Exchange] Mocked exchange instance
 		# @api public
+		#
 		def direct(name, opts = {})
 			self.exchange name, opts.merge(type: :direct)
 		end
@@ -151,6 +157,7 @@ module BunnyMock
 		#
 		# @return [BunnyMock::Exchange] Mocked exchange instance
 		# @api public
+		#
 		def topic(name, opts = {})
 			self.exchange name, opts.merge(type: :topic)
 		end
@@ -167,6 +174,7 @@ module BunnyMock
 		#
 		# @return [BunnyMock::Exchange] Mocked exchange instance
 		# @api public
+		#
 		def header(name, opts = {})
 			self.exchange name, opts.merge(type: :header)
 		end
@@ -176,6 +184,7 @@ module BunnyMock
 		#
 		# @return [BunnyMock::Exchange] Mocked default exchange instance
 		# @api public
+		#
 		def default_exchange
 			self.direct '', no_declare: true
 		end
@@ -192,6 +201,7 @@ module BunnyMock
 		#
 		# @return [BunnyMock::Queue] Queue that was mocked or looked up
 		# @api public
+		#
 		def queue(name = '', opts = {})
 
 			queue = find_queue(name) || Queue.new(self, name, opts)
@@ -207,6 +217,7 @@ module BunnyMock
 		# @return [BunnyMock::Queue] Queue that was mocked or looked up
 		# @see #queue
 		# @api public
+		#
 		def temporary_queue(opts = {})
 
 			queue '', opts.merge(exclusive: true)
