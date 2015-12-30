@@ -1,6 +1,8 @@
 Bunny Mock
 ==========
 
+[![Build Status](https://travis-ci.org/arempe93/bunny-mock.svg?branch=master)](https://travis-ci.org/arempe93/bunny-mock)
+
 A mock client for RabbitMQ, modeled after the popular [Bunny client](https://github.com/ruby-amqp/bunny). It currently supports basic usage of Bunny for managing exchanges and queues, with the goal of being able to handle and test all Bunny use cases.
 
 ## Usage
