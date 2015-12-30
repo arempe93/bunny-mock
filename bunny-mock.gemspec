@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
 	# Dependencies
 	s.add_dependency "amq-protocol", ">= 2.0.1"
 
-	# Files.
+	# Files
 	s.has_rdoc = true
 	s.extra_rdoc_files = [ 'README.md' ]
 	s.files = `git ls-files`.split '\n'
