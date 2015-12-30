@@ -20,7 +20,7 @@ module BunnyMock
 				@routes.each do |route, destination|
 
 					# send to all routes
-					destination.deliver payload, opts
+					destination.publish payload, opts
 				end
 			end
 		end
