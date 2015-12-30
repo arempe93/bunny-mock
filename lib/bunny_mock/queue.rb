@@ -23,12 +23,15 @@ module BunnyMock
 		#
 		# @see BunnyMock::Channel#queue
 		#
-		def initialize(channel, name = AMQP::Protocol::EMPTY_STRING, opts = {})
+		def initialize(channel, name = '', opts = {})
 
 			# Store creation information
 			@channel	= channel
 			@name		= name
 			@opts		= opts
+
+			# Store messages
+			@messages	= Array.new
 		end
 
 		# @group Bunny API
@@ -60,6 +63,8 @@ module BunnyMock
 		#
 		def publish(payload, opts = {})
 
+			check_queue_deleted!
+
 			# add to messages
 			@messages << { message: payload, options: opts }
 
@@ -77,6 +82,8 @@ module BunnyMock
 		# @api public
 		#
 		def bind(exchange, opts = {})
+
+			check_queue_deleted!
 
 			if exchange.respond_to?(:add_route)
 
@@ -102,6 +109,8 @@ module BunnyMock
 		#
 		def unbind(exchange, opts = {})
 
+			check_queue_deleted!
+
 			if exchange.respond_to?(:remove_route)
 
 				# we can do the unbinding ourselves
@@ -122,12 +131,14 @@ module BunnyMock
 		# @param [BunnyMock::Exchange,String] exchange Exchange to test
 		# @param [Hash] opts Binding properties
 		#
-		# @option opts [String] :routing_key Custom routing key
+		# @option opts [String] :routing_key Routing key from binding
 		#
 		# @return [Boolean] true if this queue is bound to the given exchange, false otherwise
 		# @api public
 		#
-		def bound_to?(exchange)
+		def bound_to?(exchange, opts = {})
+
+			check_queue_deleted!
 
 			if exchange.respond_to?(:has_binding?)
 
@@ -147,7 +158,7 @@ module BunnyMock
 		# @return [Integer] Number of messages in queue
 		# @api public
 		#
-		def count
+		def message_count
 			@messages.count
 		end
 
@@ -158,7 +169,16 @@ module BunnyMock
 		# @api public
 		#
 		def pop
-			@messages.pop
+			@messages.shift
+		end
+
+		##
+		# Clear all messages in queue
+		#
+		# @api public
+		#
+		def purge
+			@messages = []
 		end
 
 		##
@@ -171,13 +191,18 @@ module BunnyMock
 			@messages
 		end
 
+		##
+		# Deletes this queue
 		#
-		# Implementation
+		# @api public
 		#
+		def delete
+			@deleted = true
+		end
 
 		# @private
-		def publish(payload, props = {})
-			@messages << { message: payload, properties: props }
+		def check_queue_deleted!
+			raise 'Queue has been deleted' if @deleted
 		end
 	end
 end
