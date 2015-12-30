@@ -82,7 +82,7 @@ module BunnyMock
 			self
 		end
 
-		# @return [String] object representation
+		# @return [String] Object representation
 		def to_s
 			"#<#{self.class.name}:#{self.object_id} @id=#{@id} @open=#{open?}>"
 		end
@@ -261,6 +261,14 @@ module BunnyMock
 		end
 
 		# @private
+		def xchg_bound_to?(receiver, key, name)
+
+			source = @exchanges[name] || exchange(name)
+
+			source.has_binding? receiver, routing_key: key
+		end
+
+		# @private
 		def xchg_has_binding?(key, xchg)
 
 			exchange = @exchanges[xchg] || exchange(xchg)
@@ -284,9 +292,9 @@ module BunnyMock
 		end
 
 		# @private
-		def xchg_bind(source, routing_key, name)
+		def xchg_bind(receiver, routing_key, name)
 
-			receiver = @exchanges[name] || exchange(name)
+			source = @exchanges[name] || exchange(name)
 
 			source.add_route routing_key, receiver
 		end

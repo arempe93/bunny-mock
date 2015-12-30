@@ -171,7 +171,9 @@ module BunnyMock
 		# Unbind this exchange from another exchange
 		#
 		# @param [BunnyMock::Exchange,String] exchange Exchange to unbind from
-		# @param [Hash] opts Binding properties (insignificant)
+		# @param [Hash] opts Binding properties
+		#
+		# @option opts [String] :routing_key Custom routing key
 		#
 		# @api public
 		#
@@ -195,11 +197,14 @@ module BunnyMock
 		# Check if this exchange is bound to another exchange
 		#
 		# @param [BunnyMock::Exchange,String] exchange Exchange to check
+		# @param [Hash] opts Binding properties
+		#
+		# @options opts [String] :routing_key Routing key from binding
 		#
 		# @return [Boolean] true if this exchange is bound to the given exchange, false otherwise
 		# @api public
 		#
-		def bound_to?(exchange)
+		def bound_to?(exchange, opts = {})
 
 			if exchange.respond_to?(:has_binding?)
 

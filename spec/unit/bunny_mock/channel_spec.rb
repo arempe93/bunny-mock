@@ -1,10 +1,5 @@
 describe BunnyMock::Channel do
 
-	before do
-		@session = BunnyMock::Session.new
-		@channel = @session.create_channel 1
-	end
-
 	context '::new' do
 
 		before do
