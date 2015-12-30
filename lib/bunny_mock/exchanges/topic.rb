@@ -34,6 +34,9 @@ module BunnyMock
 				# replace multi wildcards with regex for many domains separated by '.'
 				key.gsub! MULTI_WILDCARD, '\w+\.?'
 
+				# turn key into regex
+				key = Regexp.new key
+
 				# get all route keys for this exchange
 				delivery_keys = @routes.keys.dup
 

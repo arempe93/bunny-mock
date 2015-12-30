@@ -3,7 +3,7 @@ describe BunnyMock::Exchanges::Direct do
 	context '#deliver' do
 
 		before do
-			@source = @channel.exchange 'xchg.source'
+			@source = @channel.direct 'xchg.source'
 
 			@first = @channel.queue 'queue.first'
 			@second = @channel.queue 'queue.second'
