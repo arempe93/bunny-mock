@@ -75,6 +75,19 @@ it 'should publish messages to queues' do
 	expect(payload[:message]).to eq('Testing message')
 	expect(payload[:options][:priority]).to eq(5)
 end
+
+it 'should route messages from exchanges' do
+
+    channel = BunnyMock.new.start.channel
+
+    xchg = channel.topic 'xchg.topic'
+	queue = channel.queue 'queue.test'
+
+    xchg.publish 'Routed message', routing_key: '*.test'
+
+    expect(queue.message_count).to eq(1)
+	expect(queue.pop[:message]).to eq('Routed message')
+end
 ```
 
 ### Binding
