@@ -5,6 +5,7 @@ gem 'amq-protocol'
 group :development do
 
 	gem 'yard'
+	gem 'coveralls', require: false
 end
 
 group :test do

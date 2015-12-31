@@ -6,6 +6,9 @@ require 'bundler'
 Bundler.setup :default, :test
 Bundler.require
 
+require 'coveralls'
+Coveralls.wear!
+
 require 'bunny-mock'
 
 RSpec.configure do |config|
