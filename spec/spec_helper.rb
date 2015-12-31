@@ -6,7 +6,7 @@ require 'bundler'
 Bundler.setup :default, :test
 Bundler.require
 
-require 'bunny_mock'
+require 'bunny-mock'
 
 RSpec.configure do |config|
 

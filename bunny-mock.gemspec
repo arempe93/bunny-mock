@@ -5,7 +5,7 @@ require 'base64'
 require File.expand_path("../lib/bunny_mock/version", __FILE__)
 
 Gem::Specification.new do |s|
-	s.name = 'bunny_mock'
+	s.name = 'bunny-mock'
 	s.version = BunnyMock::VERSION.dup
 	s.summary = 'Mocking for the popular Bunny client for RabbitMQ'
 	s.description = 'Easy to use mocking for testing the Bunny client for RabbitMQ'
