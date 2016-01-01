@@ -225,6 +225,34 @@ module BunnyMock
 
 		# @endgroup
 
+		# @group Testing helpers
+
+		##
+		# Test if queue exists in channel cache
+		#
+		# @param [String] name Name of queue
+		#
+		# @return [Boolean] true if queue exists, false otherwise
+		# @api public
+		#
+		def queue_exists?(name)
+			!!find_queue(name)
+		end
+
+		##
+		# Test if exchange exists in channel cache
+		#
+		# @param [String] name Name of exchange
+		#
+		# @return [Boolean] true if exchange exists, false otherwise
+		# @api public
+		#
+		def exchange_exists?(name)
+			!!find_exchange(name)
+		end
+
+		# @endgroup
+
 		#
 		# Implementation
 		#
