@@ -21,3 +21,4 @@ debug/*
 *.dump
 deploy.docs.sh
 .ruby-version
+coverage/
