@@ -132,7 +132,7 @@ module BunnyMock
 
 		# @private
 		def deregister_queue(queue)
-			@queues.delete queue.name
+			@queues.delete queue
 		end
 
 		# @private
@@ -147,7 +147,7 @@ module BunnyMock
 
 		# @private
 		def deregister_exchange(xchg)
-			@exchanges.delete xchg.name
+			@exchanges.delete xchg
 		end
 	end
 end

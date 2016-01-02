@@ -157,4 +157,16 @@ describe BunnyMock::Queue do
 			expect(@queue.message_count).to eq(0)
 		end
 	end
+
+	context '#delete' do
+
+		before do
+			@queue.delete
+		end
+
+		it 'should remove queue from session' do
+
+			expect(@session.queue_exists?(@queue.name)).to be_falsey
+		end
+	end
 end

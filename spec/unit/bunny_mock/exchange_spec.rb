@@ -156,4 +156,17 @@ describe BunnyMock::Exchange do
 			expect(@source.has_binding?(@receiver)).to be_falsey
 		end
 	end
+
+	context '#delete' do
+
+		before do
+			@exchange = @channel.direct 'xchg.direct'
+			@exchange.delete
+		end
+
+		it 'should remove exchange from session' do
+
+			expect(@session.exchange_exists?(@exchange.name)).to be_falsey
+		end
+	end
 end
