@@ -15,39 +15,37 @@ BunnyMock can be injected into your RabbitMQ application in place of Bunny for t
 ```ruby
 require 'bunny'
 
-module AMQP
-    module Factory
+module RabbitFactory
 
-		## Connection, can be mocked for tests
-		attr_accessor :connection
+	## Connection, can be mocked for tests
+	attr_accessor :connection
 
-        ####################################################
-        #   Connection Management
-        ####################################################
+    ####################################################
+    #   Connection Management
+    ####################################################
 
-        def self.connect
+    def self.connect
 
-            # create bunny rmq client
-            @connection = Bunny.new
+        # create bunny rmq client
+        @connection = Bunny.new
 
-            # make connection
-            @connection.start
+        # make connection
+        @connection.start
 
-            # return connection
-            @connection
-        end
+        # return connection
+        @connection
+    end
 
-		def self.get_channel
+	def self.get_channel
 
-            # make connection if not connected
-            connect unless defined?(@connection) and @connection.open?
+        # make connection if not connected
+        connect unless defined?(@connection) and @connection.open?
 
-            # get channel
-            @connection.channel
-        end
+        # get channel
+        @connection.channel
+    end
 
-		...
-	end
+	...
 end
 ```
 
@@ -55,7 +53,7 @@ In this case, the following code placed in `spec_helper` or `test_helper` or wha
 
 ```ruby
 require 'bunny-mock'
-AMQP::Factory.connection = BunnyMock.new.start
+RabbitFactory.connection = BunnyMock.new.start
 ```
 
 ## Examples
