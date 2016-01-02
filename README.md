@@ -55,6 +55,28 @@ In this case, to set up your tests, you can simply set `AMQP::Factory.connection
 
 ## Examples
 
+#### Declaration
+
+```ruby
+it 'should create queues and exchanges' do
+
+    session = BunnyMock.new.start
+    channel = session.channel
+
+    queue = channel.queue 'queue.test'
+    expect(session.queue_exists?('queue.test')).to be_truthy
+
+    queue.delete
+    expect(session.queue_exists?('queue.test')).to be_falsey
+
+    xchg = channel.exchange 'xchg.test'
+    expect(session.exchange_exists?('exchange.test')).to be_truthy
+
+    xchg.delete
+    expect(session.exchange_exists?('exchange.test')).to be_falsey
+end
+```
+
 #### Publishing
 
 ```ruby
