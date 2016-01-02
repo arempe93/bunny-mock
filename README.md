@@ -10,7 +10,7 @@ A mock client for RabbitMQ, modeled after the popular [Bunny client](https://git
 
 ## Usage
 
-BunnyMock can be injected into your RabbitMQ application in place of Bunny for testing. Consider the following example of an RabibtMQ helper module, in Rails
+BunnyMock can be injected into your RabbitMQ application in place of Bunny for testing. Consider the following [example of an RabibtMQ helper module](https://github.com/arempe93/amqp-example/blob/master/lib/amqp/factory.rb) that uses Bunny
 
 ```ruby
 require 'bunny'
@@ -19,7 +19,7 @@ module AMQP
     module Factory
 
 		## Connection, can be mocked for tests
-		mattr_accessor :connection
+		attr_accessor :connection
 
         ####################################################
         #   Connection Management
@@ -28,7 +28,7 @@ module AMQP
         def self.connect
 
             # create bunny rmq client
-            @connection = Bunny.new Global.amqp.to_hash
+            @connection = Bunny.new
 
             # make connection
             @connection.start
@@ -51,9 +51,16 @@ module AMQP
 end
 ```
 
-In this case, to set up your tests, you can simply set `AMQP::Factory.connection = BunnyMock.new.start` to inject the mock library. Then you can use the mock helpers in your tests.
+In this case, the following code placed in `spec_helper` or `test_helper` or what have you is all you need to start using BunnyMock to test your RabbitMQ application
+
+```ruby
+require 'bunny-mock'
+AMQP::Factory.connection = BunnyMock.new.start
+```
 
 ## Examples
+
+Here are some examples showcasing what BunnyMock can do
 
 #### Declaration
 
@@ -156,7 +163,7 @@ end
 
 ## Installation
 
-### With RubyGems
+#### With RubyGems
 
 To install BunnyMock with RubyGems:
 
@@ -164,7 +171,7 @@ To install BunnyMock with RubyGems:
 gem install bunny-mock
 ```
 
-### With Bundler
+#### With Bundler
 
 To use BunnyMock with a Bundler managed project:
 
