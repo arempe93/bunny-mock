@@ -14,12 +14,6 @@ module BunnyMock
 		# @return [Symbol] Current channel state
 		attr_reader :status
 
-		# @return [Hash<String, BunnyMock::Exchange>] Exchanges created by this channel
-		attr_reader :exchanges
-
-		# @return [Hash<String, BunnyMock::Queue>] Queues created by this channel
-		attr_reader :queues
-
 		##
 		# Create a new {BunnyMock::Channel} instance
 		#
@@ -106,9 +100,9 @@ module BunnyMock
 		#
 		def exchange(name, opts = {})
 
-			xchg = find_exchange(name) || Exchange.declare(self, name, opts)
+			xchg = @connection.find_exchange(name) || Exchange.declare(self, name, opts)
 
-			register_exchange xchg
+			@connection.register_exchange xchg
 		end
 
 		##
@@ -204,9 +198,9 @@ module BunnyMock
 		#
 		def queue(name = '', opts = {})
 
-			queue = find_queue(name) || Queue.new(self, name, opts)
+			queue = @connection.find_queue(name) || Queue.new(self, name, opts)
 
-			register_queue queue
+			@connection.register_queue queue
 		end
 
 		##
@@ -225,57 +219,24 @@ module BunnyMock
 
 		# @endgroup
 
-		# @group Testing helpers
-
-		##
-		# Test if queue exists in channel cache
-		#
-		# @param [String] name Name of queue
-		#
-		# @return [Boolean] true if queue exists, false otherwise
-		# @api public
-		#
-		def queue_exists?(name)
-			!!find_queue(name)
-		end
-
-		##
-		# Test if exchange exists in channel cache
-		#
-		# @param [String] name Name of exchange
-		#
-		# @return [Boolean] true if exchange exists, false otherwise
-		# @api public
-		#
-		def exchange_exists?(name)
-			!!find_exchange(name)
-		end
-
-		# @endgroup
-
 		#
 		# Implementation
 		#
 
 		# @private
-		def find_queue(name)
-			@queues[name]
-		end
-
-		# @private
-		def register_queue(queue)
-			@queues[queue.name] = queue
-		end
-
-		# @private
 		def deregister_queue(queue)
-			@queues.delete queue.name
+			@connection.deregister_queue queue.name
+		end
+
+		# @private
+		def deregister_exchange(xchg)
+			@connection.deregister_exchange xchg.name
 		end
 
 		# @private
 		def queue_bind(queue, key, xchg)
 
-			exchange = @exchanges[xchg] || exchange(xchg)
+			exchange = @connection.find_exchange xchg
 
 			exchange.add_route key, queue
 		end
@@ -283,7 +244,7 @@ module BunnyMock
 		# @private
 		def queue_unbind(key, xchg)
 
-			exchange = @exchanges[xchg] || exchange(xchg)
+			exchange = @connection.find_exchange xchg
 
 			exchange.remove_route key
 		end
@@ -291,7 +252,7 @@ module BunnyMock
 		# @private
 		def xchg_bound_to?(receiver, key, name)
 
-			source = @exchanges[name] || exchange(name)
+			source = @connection.find_exchange name
 
 			source.has_binding? receiver, routing_key: key
 		end
@@ -299,30 +260,15 @@ module BunnyMock
 		# @private
 		def xchg_has_binding?(key, xchg)
 
-			exchange = @exchanges[xchg] || exchange(xchg)
+			exchange = @connection.find_exchange xchg
 
 			exchange.has_binding? key
 		end
 
 		# @private
-		def find_exchange(name)
-			@exchanges[name]
-		end
-
-		# @private
-		def register_exchange(xchg)
-			@exchanges[xchg.name] = xchg
-		end
-
-		# @private
-		def deregister_exchange(xchg)
-			@exchanges.delete xchg.name
-		end
-
-		# @private
 		def xchg_bind(receiver, routing_key, name)
 
-			source = @exchanges[name] || exchange(name)
+			source = @connection.find_exchange name
 
 			source.add_route routing_key, receiver
 		end
@@ -330,7 +276,7 @@ module BunnyMock
 		# @private
 		def xchg_unbind(routing_key, name)
 
-			source = @exchanges[name] || exchange(name)
+			source = @connection.find_exchange name
 
 			source.remove_route routing_key
 		end

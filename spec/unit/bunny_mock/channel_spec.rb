@@ -94,7 +94,7 @@ describe BunnyMock::Channel do
 
 			xchg = @channel.exchange 'testing.xchg', type: :fanout
 
-			expect(@channel.exchanges['testing.xchg']).to eq(xchg)
+			expect(@session.exchange_exists?('testing.xchg')).to be_truthy
 		end
 	end
 
@@ -161,7 +161,7 @@ describe BunnyMock::Channel do
 
 			q = @channel.queue 'testing.q'
 
-			expect(@channel.queues['testing.q']).to eq(q)
+			expect(@session.queue_exists?('testing.q')).to be_truthy
 		end
 	end
 

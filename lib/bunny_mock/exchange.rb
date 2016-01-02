@@ -137,6 +137,9 @@ module BunnyMock
 		# @api public
 		#
 		def delete(opts = {})
+
+			@channel.deregister_exchange self
+
 			@deleted = true
 		end
 

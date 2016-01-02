@@ -9,6 +9,12 @@ module BunnyMock
 		# @return [Symbol] Current session status
 		attr_reader :status
 
+		# @return [Hash<String, BunnyMock::Exchange>] Exchanges created by this channel
+		attr_reader :exchanges
+
+		# @return [Hash<String, BunnyMock::Queue>] Queues created by this channel
+		attr_reader :queues
+
 		##
 		# Creates a new {BunnyMock::Session} instance
 		#
@@ -20,6 +26,10 @@ module BunnyMock
 
 			# create channel hash
 			@channels	= Hash.new
+
+			# create storage for queues and exchanges
+			@queues		= Hash.new
+			@exchanges	= Hash.new
 		end
 
 		##
@@ -81,5 +91,63 @@ module BunnyMock
 			@channels[n] = channel
 		end
 		alias channel create_channel
+
+		##
+		# Test if queue exists in channel cache
+		#
+		# @param [String] name Name of queue
+		#
+		# @return [Boolean] true if queue exists, false otherwise
+		# @api public
+		#
+		def queue_exists?(name)
+			!!find_queue(name)
+		end
+
+		##
+		# Test if exchange exists in channel cache
+		#
+		# @param [String] name Name of exchange
+		#
+		# @return [Boolean] true if exchange exists, false otherwise
+		# @api public
+		#
+		def exchange_exists?(name)
+			!!find_exchange(name)
+		end
+
+		#
+		# Implementation
+		#
+
+		# @private
+		def find_queue(name)
+			@queues[name]
+		end
+
+		# @private
+		def register_queue(queue)
+			@queues[queue.name] = queue
+		end
+
+		# @private
+		def deregister_queue(queue)
+			@queues.delete queue.name
+		end
+
+		# @private
+		def find_exchange(name)
+			@exchanges[name]
+		end
+
+		# @private
+		def register_exchange(xchg)
+			@exchanges[xchg.name] = xchg
+		end
+
+		# @private
+		def deregister_exchange(xchg)
+			@exchanges.delete xchg.name
+		end
 	end
 end

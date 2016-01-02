@@ -197,6 +197,9 @@ module BunnyMock
 		# @api public
 		#
 		def delete
+
+			@channel.deregister_queue self
+
 			@deleted = true
 		end
 
