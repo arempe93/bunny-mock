@@ -238,6 +238,8 @@ module BunnyMock
 
 			exchange = @connection.find_exchange xchg
 
+			raise NotFound.new "Exchange '#{xchg}' was not found" unless exchange
+
 			exchange.add_route key, queue
 		end
 
@@ -245,6 +247,8 @@ module BunnyMock
 		def queue_unbind(key, xchg)
 
 			exchange = @connection.find_exchange xchg
+
+			raise NotFound.new "Exchange '#{xchg}' was not found" unless exchange
 
 			exchange.remove_route key
 		end
@@ -254,6 +258,8 @@ module BunnyMock
 
 			source = @connection.find_exchange name
 
+			raise NotFound.new "Exchange '#{name}' was not found" unless source
+
 			source.has_binding? receiver, routing_key: key
 		end
 
@@ -261,6 +267,8 @@ module BunnyMock
 		def xchg_has_binding?(key, xchg)
 
 			exchange = @connection.find_exchange xchg
+
+			raise NotFound.new "Exchange '#{xchg}' was not found" unless exchange
 
 			exchange.has_binding? key
 		end
@@ -270,6 +278,8 @@ module BunnyMock
 
 			source = @connection.find_exchange name
 
+			raise NotFound.new "Exchange '#{name}' was not found" unless source
+
 			source.add_route routing_key, receiver
 		end
 
@@ -277,6 +287,8 @@ module BunnyMock
 		def xchg_unbind(routing_key, name)
 
 			source = @connection.find_exchange name
+
+			raise NotFound.new "Exchange '#{name}' was not found" unless source
 
 			source.remove_route routing_key
 		end

@@ -50,6 +50,11 @@ describe BunnyMock::Exchange do
 			expect(@receiver.bound_to?(@source)).to be_truthy
 			expect(@source.has_binding?(@receiver)).to be_truthy
 		end
+
+		it 'should raise error when exchange does not exists' do
+
+			expect { @receiver.bind('this.xchg.does.not.exist') }.to raise_exception(BunnyMock::NotFound)
+		end
 	end
 
 	context '#unbind' do
@@ -75,6 +80,11 @@ describe BunnyMock::Exchange do
 
 			expect(@receiver.bound_to?(@source)).to be_falsey
 			expect(@source.has_binding?(@receiver)).to be_falsey
+		end
+
+		it 'should raise error when exchange does not exists' do
+
+			expect { @receiver.unbind('this.xchg.does.not.exist') }.to raise_exception(BunnyMock::NotFound)
 		end
 	end
 
@@ -114,6 +124,11 @@ describe BunnyMock::Exchange do
 
 			expect(@receiver.bound_to?(@source)).to be_falsey
 		end
+
+		it 'should raise error when exchange does not exists' do
+
+			expect { @receiver.bound_to?('this.xchg.does.not.exist') }.to raise_exception(BunnyMock::NotFound)
+		end
 	end
 
 	context '#has_binding?' do
@@ -141,5 +156,4 @@ describe BunnyMock::Exchange do
 			expect(@source.has_binding?(@receiver)).to be_falsey
 		end
 	end
-
 end

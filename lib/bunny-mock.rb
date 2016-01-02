@@ -1,6 +1,8 @@
 require 'bunny_mock/version'
 require 'amq/protocol/client'
 
+require 'bunny_mock/exceptions'
+
 require 'bunny_mock/session'
 require 'bunny_mock/channel'
 require 'bunny_mock/exchange'
