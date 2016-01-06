@@ -27,25 +27,27 @@ module RabbitFactory
     def self.connect
 
         # create bunny rmq client
-        @connection = Bunny.new
+        @@connection = Bunny.new
 
         # make connection
-        @connection.start
+        @@connection.start
 
         # return connection
-        @connection
+        @@connection
     end
 
 	def self.get_channel
 
         # make connection if not connected
-        connect unless defined?(@connection) and @connection.open?
+        connect unless defined?(@@connection) and @@connection.open?
 
         # get channel
-        @connection.channel
+        @@connection.channel
     end
 
 	...
+
+	# methods that use get_channel to obtain a Bunny channel
 end
 ```
 
