@@ -1,296 +1,296 @@
 module BunnyMock
-	class Channel
+  class Channel
 
-		#
-		# API
-		#
+    #
+    # API
+    #
 
-		# @return [Integer] Channel identifier
-		attr_reader :id
+    # @return [Integer] Channel identifier
+    attr_reader :id
 
-		# @return [BunnyMock::Session] Session this channel belongs to
-		attr_reader :connection
+    # @return [BunnyMock::Session] Session this channel belongs to
+    attr_reader :connection
 
-		# @return [Symbol] Current channel state
-		attr_reader :status
+    # @return [Symbol] Current channel state
+    attr_reader :status
 
-		##
-		# Create a new {BunnyMock::Channel} instance
-		#
-		# @param [BunnyMock::Session] connection Mocked session instance
-		# @param [Integer] id Channel identifier
-		#
-		# @api public
-		#
-		def initialize(connection = nil, id = nil)
+    ##
+    # Create a new {BunnyMock::Channel} instance
+    #
+    # @param [BunnyMock::Session] connection Mocked session instance
+    # @param [Integer] id Channel identifier
+    #
+    # @api public
+    #
+    def initialize(connection = nil, id = nil)
 
-			# store channel id
-			@id				= id
+      # store channel id
+      @id       = id
 
-			# store connection information
-			@connection		= connection
+      # store connection information
+      @connection   = connection
 
-			# initialize exchange and queue storage
-			@exchanges		= Hash.new
-			@queues			= Hash.new
+      # initialize exchange and queue storage
+      @exchanges    = Hash.new
+      @queues     = Hash.new
 
-			# set status to opening
-			@status			= :opening
-		end
+      # set status to opening
+      @status     = :opening
+    end
 
-		# @return [Boolean] true if status is open, false otherwise
-		# @api public
-		def open?
-			@status == :open
-		end
+    # @return [Boolean] true if status is open, false otherwise
+    # @api public
+    def open?
+      @status == :open
+    end
 
-		# @return [Boolean] true if status is closed, false otherwise
-		# @api public
-		def closed?
-			@status == :closed
-		end
+    # @return [Boolean] true if status is closed, false otherwise
+    # @api public
+    def closed?
+      @status == :closed
+    end
 
-		##
-		# Sets status to open
-		#
-		# @return [BunnyMock::Channel] self
-		# @api public
-		#
-		def open
+    ##
+    # Sets status to open
+    #
+    # @return [BunnyMock::Channel] self
+    # @api public
+    #
+    def open
 
-			@status = :open
+      @status = :open
 
-			self
-		end
+      self
+    end
 
-		##
-		# Sets status to closed
-		#
-		# @return [BunnyMock::Channel] self
-		# @api public
-		#
-		def close
+    ##
+    # Sets status to closed
+    #
+    # @return [BunnyMock::Channel] self
+    # @api public
+    #
+    def close
 
-			@status = :closed
+      @status = :closed
 
-			self
-		end
+      self
+    end
 
-		# @return [String] Object representation
-		def to_s
-			"#<#{self.class.name}:#{self.object_id} @id=#{@id} @open=#{open?}>"
-		end
-		alias inspect to_s
+    # @return [String] Object representation
+    def to_s
+      "#<#{self.class.name}:#{self.object_id} @id=#{@id} @open=#{open?}>"
+    end
+    alias inspect to_s
 
-		# @group Exchange API
+    # @group Exchange API
 
-		##
-		# Mocks an exchange
-		#
-		# @param [String] name Exchange name
-		# @param [Hash] opts Exchange parameters
-		#
-		# @option opts [Symbol,String] :type Type of exchange
-		# @option opts [Boolean] :durable
-		# @option opts [Boolean] :auto_delete
-		# @option opts [Hash] :arguments
-		#
-		# @return [BunnyMock::Exchange] Mocked exchange instance
-		# @api public
-		#
-		def exchange(name, opts = {})
+    ##
+    # Mocks an exchange
+    #
+    # @param [String] name Exchange name
+    # @param [Hash] opts Exchange parameters
+    #
+    # @option opts [Symbol,String] :type Type of exchange
+    # @option opts [Boolean] :durable
+    # @option opts [Boolean] :auto_delete
+    # @option opts [Hash] :arguments
+    #
+    # @return [BunnyMock::Exchange] Mocked exchange instance
+    # @api public
+    #
+    def exchange(name, opts = {})
 
-			xchg = @connection.find_exchange(name) || Exchange.declare(self, name, opts)
+      xchg = @connection.find_exchange(name) || Exchange.declare(self, name, opts)
 
-			@connection.register_exchange xchg
-		end
+      @connection.register_exchange xchg
+    end
 
-		##
-		# Mocks a fanout exchange
-		#
-		# @param [String] name Exchange name
-		# @param [Hash] opts Exchange parameters
-		#
-		# @option opts [Boolean] :durable
-		# @option opts [Boolean] :auto_delete
-		# @option opts [Hash] :arguments
-		#
-		# @return [BunnyMock::Exchange] Mocked exchange instance
-		# @api public
-		#
-		def fanout(name, opts = {})
-			self.exchange name, opts.merge(type: :fanout)
-		end
+    ##
+    # Mocks a fanout exchange
+    #
+    # @param [String] name Exchange name
+    # @param [Hash] opts Exchange parameters
+    #
+    # @option opts [Boolean] :durable
+    # @option opts [Boolean] :auto_delete
+    # @option opts [Hash] :arguments
+    #
+    # @return [BunnyMock::Exchange] Mocked exchange instance
+    # @api public
+    #
+    def fanout(name, opts = {})
+      self.exchange name, opts.merge(type: :fanout)
+    end
 
-		##
-		# Mocks a direct exchange
-		#
-		# @param [String] name Exchange name
-		# @param [Hash] opts Exchange parameters
-		#
-		# @option opts [Boolean] :durable
-		# @option opts [Boolean] :auto_delete
-		# @option opts [Hash] :arguments
-		#
-		# @return [BunnyMock::Exchange] Mocked exchange instance
-		# @api public
-		#
-		def direct(name, opts = {})
-			self.exchange name, opts.merge(type: :direct)
-		end
+    ##
+    # Mocks a direct exchange
+    #
+    # @param [String] name Exchange name
+    # @param [Hash] opts Exchange parameters
+    #
+    # @option opts [Boolean] :durable
+    # @option opts [Boolean] :auto_delete
+    # @option opts [Hash] :arguments
+    #
+    # @return [BunnyMock::Exchange] Mocked exchange instance
+    # @api public
+    #
+    def direct(name, opts = {})
+      self.exchange name, opts.merge(type: :direct)
+    end
 
-		##
-		# Mocks a topic exchange
-		#
-		# @param [String] name Exchange name
-		# @param [Hash] opts Exchange parameters
-		#
-		# @option opts [Boolean] :durable
-		# @option opts [Boolean] :auto_delete
-		# @option opts [Hash] :arguments
-		#
-		# @return [BunnyMock::Exchange] Mocked exchange instance
-		# @api public
-		#
-		def topic(name, opts = {})
-			self.exchange name, opts.merge(type: :topic)
-		end
+    ##
+    # Mocks a topic exchange
+    #
+    # @param [String] name Exchange name
+    # @param [Hash] opts Exchange parameters
+    #
+    # @option opts [Boolean] :durable
+    # @option opts [Boolean] :auto_delete
+    # @option opts [Hash] :arguments
+    #
+    # @return [BunnyMock::Exchange] Mocked exchange instance
+    # @api public
+    #
+    def topic(name, opts = {})
+      self.exchange name, opts.merge(type: :topic)
+    end
 
-		##
-		# Mocks a headers exchange
-		#
-		# @param [String] name Exchange name
-		# @param [Hash] opts Exchange parameters
-		#
-		# @option opts [Boolean] :durable
-		# @option opts [Boolean] :auto_delete
-		# @option opts [Hash] :arguments
-		#
-		# @return [BunnyMock::Exchange] Mocked exchange instance
-		# @api public
-		#
-		def header(name, opts = {})
-			self.exchange name, opts.merge(type: :header)
-		end
+    ##
+    # Mocks a headers exchange
+    #
+    # @param [String] name Exchange name
+    # @param [Hash] opts Exchange parameters
+    #
+    # @option opts [Boolean] :durable
+    # @option opts [Boolean] :auto_delete
+    # @option opts [Hash] :arguments
+    #
+    # @return [BunnyMock::Exchange] Mocked exchange instance
+    # @api public
+    #
+    def header(name, opts = {})
+      self.exchange name, opts.merge(type: :header)
+    end
 
-		##
-		# Mocks RabbitMQ default exchange
-		#
-		# @return [BunnyMock::Exchange] Mocked default exchange instance
-		# @api public
-		#
-		def default_exchange
-			self.direct '', no_declare: true
-		end
+    ##
+    # Mocks RabbitMQ default exchange
+    #
+    # @return [BunnyMock::Exchange] Mocked default exchange instance
+    # @api public
+    #
+    def default_exchange
+      self.direct '', no_declare: true
+    end
 
-		# @endgroup
+    # @endgroup
 
-		# @group Queue API
+    # @group Queue API
 
-		##
-		# Create a new {BunnyMock::Queue} instance, or find in channel cache
-		#
-		# @param [String] name Name of queue
-		# @param [Hash] opts Queue creation options
-		#
-		# @return [BunnyMock::Queue] Queue that was mocked or looked up
-		# @api public
-		#
-		def queue(name = '', opts = {})
+    ##
+    # Create a new {BunnyMock::Queue} instance, or find in channel cache
+    #
+    # @param [String] name Name of queue
+    # @param [Hash] opts Queue creation options
+    #
+    # @return [BunnyMock::Queue] Queue that was mocked or looked up
+    # @api public
+    #
+    def queue(name = '', opts = {})
 
-			queue = @connection.find_queue(name) || Queue.new(self, name, opts)
+      queue = @connection.find_queue(name) || Queue.new(self, name, opts)
 
-			@connection.register_queue queue
-		end
+      @connection.register_queue queue
+    end
 
-		##
-		# Create a new {BunnyMock::Queue} instance with no name
-		#
-		# @param [Hash] opts Queue creation options
-		#
-		# @return [BunnyMock::Queue] Queue that was mocked or looked up
-		# @see #queue
-		# @api public
-		#
-		def temporary_queue(opts = {})
+    ##
+    # Create a new {BunnyMock::Queue} instance with no name
+    #
+    # @param [Hash] opts Queue creation options
+    #
+    # @return [BunnyMock::Queue] Queue that was mocked or looked up
+    # @see #queue
+    # @api public
+    #
+    def temporary_queue(opts = {})
 
-			queue '', opts.merge(exclusive: true)
-		end
+      queue '', opts.merge(exclusive: true)
+    end
 
-		# @endgroup
+    # @endgroup
 
-		#
-		# Implementation
-		#
+    #
+    # Implementation
+    #
 
-		# @private
-		def deregister_queue(queue)
-			@connection.deregister_queue queue.name
-		end
+    # @private
+    def deregister_queue(queue)
+      @connection.deregister_queue queue.name
+    end
 
-		# @private
-		def deregister_exchange(xchg)
-			@connection.deregister_exchange xchg.name
-		end
+    # @private
+    def deregister_exchange(xchg)
+      @connection.deregister_exchange xchg.name
+    end
 
-		# @private
-		def queue_bind(queue, key, xchg)
+    # @private
+    def queue_bind(queue, key, xchg)
 
-			exchange = @connection.find_exchange xchg
+      exchange = @connection.find_exchange xchg
 
-			raise NotFound.new "Exchange '#{xchg}' was not found" unless exchange
+      raise NotFound.new "Exchange '#{xchg}' was not found" unless exchange
 
-			exchange.add_route key, queue
-		end
+      exchange.add_route key, queue
+    end
 
-		# @private
-		def queue_unbind(key, xchg)
+    # @private
+    def queue_unbind(key, xchg)
 
-			exchange = @connection.find_exchange xchg
+      exchange = @connection.find_exchange xchg
 
-			raise NotFound.new "Exchange '#{xchg}' was not found" unless exchange
+      raise NotFound.new "Exchange '#{xchg}' was not found" unless exchange
 
-			exchange.remove_route key
-		end
+      exchange.remove_route key
+    end
 
-		# @private
-		def xchg_bound_to?(receiver, key, name)
+    # @private
+    def xchg_bound_to?(receiver, key, name)
 
-			source = @connection.find_exchange name
+      source = @connection.find_exchange name
 
-			raise NotFound.new "Exchange '#{name}' was not found" unless source
+      raise NotFound.new "Exchange '#{name}' was not found" unless source
 
-			source.has_binding? receiver, routing_key: key
-		end
+      source.has_binding? receiver, routing_key: key
+    end
 
-		# @private
-		def xchg_has_binding?(key, xchg)
+    # @private
+    def xchg_has_binding?(key, xchg)
 
-			exchange = @connection.find_exchange xchg
+      exchange = @connection.find_exchange xchg
 
-			raise NotFound.new "Exchange '#{xchg}' was not found" unless exchange
+      raise NotFound.new "Exchange '#{xchg}' was not found" unless exchange
 
-			exchange.has_binding? key
-		end
+      exchange.has_binding? key
+    end
 
-		# @private
-		def xchg_bind(receiver, routing_key, name)
+    # @private
+    def xchg_bind(receiver, routing_key, name)
 
-			source = @connection.find_exchange name
+      source = @connection.find_exchange name
 
-			raise NotFound.new "Exchange '#{name}' was not found" unless source
+      raise NotFound.new "Exchange '#{name}' was not found" unless source
 
-			source.add_route routing_key, receiver
-		end
+      source.add_route routing_key, receiver
+    end
 
-		# @private
-		def xchg_unbind(routing_key, name)
+    # @private
+    def xchg_unbind(routing_key, name)
 
-			source = @connection.find_exchange name
+      source = @connection.find_exchange name
 
-			raise NotFound.new "Exchange '#{name}' was not found" unless source
+      raise NotFound.new "Exchange '#{name}' was not found" unless source
 
-			source.remove_route routing_key
-		end
-	end
+      source.remove_route routing_key
+    end
+  end
 end

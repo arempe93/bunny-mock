@@ -1,33 +1,33 @@
 module BunnyMock
-	module Exchanges
-		class Header < BunnyMock::Exchange
+  module Exchanges
+    class Header < BunnyMock::Exchange
 
-			# @private
-			# @return [Regexp] Any match
-			ANY = /^any$/i
+      # @private
+      # @return [Regexp] Any match
+      ANY = /^any$/i
 
-			# @private
-			# @return [Regexp] All match
-			ALL = /^all$/i
+      # @private
+      # @return [Regexp] All match
+      ALL = /^all$/i
 
-			#
-			# API
-			#
+      #
+      # API
+      #
 
-			##
-			# Deliver a message to routes with header matches
-			#
-			# @param [Object] payload Message content
-			# @param [Hash] opts Message properties
-			# @param [String] key Routing key
-			#
-			# @api public
-			#
-			def deliver(payload, opts, key)
+      ##
+      # Deliver a message to routes with header matches
+      #
+      # @param [Object] payload Message content
+      # @param [Hash] opts Message properties
+      # @param [String] key Routing key
+      #
+      # @api public
+      #
+      def deliver(payload, opts, key)
 
-				# ~: proper headers exchange implementation
-				@routes[key].publish payload, opts if @routes[key]
-			end
-		end
-	end
+        # ~: proper headers exchange implementation
+        @routes[key].publish payload, opts if @routes[key]
+      end
+    end
+  end
 end

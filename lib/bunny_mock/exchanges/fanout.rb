@@ -1,28 +1,28 @@
 module BunnyMock
-	module Exchanges
-		class Fanout < BunnyMock::Exchange
+  module Exchanges
+    class Fanout < BunnyMock::Exchange
 
-			#
-			# API
-			#
+      #
+      # API
+      #
 
-			##
-			# Deliver a message to all routes
-			#
-			# @param [Object] payload Message content
-			# @param [Hash] opts Message properties
-			# @param [String] key Routing key
-			#
-			# @api public
-			#
-			def deliver(payload, opts, key)
+      ##
+      # Deliver a message to all routes
+      #
+      # @param [Object] payload Message content
+      # @param [Hash] opts Message properties
+      # @param [String] key Routing key
+      #
+      # @api public
+      #
+      def deliver(payload, opts, key)
 
-				@routes.each do |route, destination|
+        @routes.each do |route, destination|
 
-					# send to all routes
-					destination.publish payload, opts
-				end
-			end
-		end
-	end
+          # send to all routes
+          destination.publish payload, opts
+        end
+      end
+    end
+  end
 end

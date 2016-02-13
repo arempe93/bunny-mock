@@ -1,24 +1,24 @@
 module BunnyMock
-	module Exchanges
-		class Direct < BunnyMock::Exchange
+  module Exchanges
+    class Direct < BunnyMock::Exchange
 
-			#
-			# API
-			#
+      #
+      # API
+      #
 
-			##
-			# Deliver a message to route with direct key match
-			#
-			# @param [Object] payload Message content
-			# @param [Hash] opts Message properties
-			# @param [String] key Routing key
-			#
-			# @api public
-			#
-			def deliver(payload, opts, key)
+      ##
+      # Deliver a message to route with direct key match
+      #
+      # @param [Object] payload Message content
+      # @param [Hash] opts Message properties
+      # @param [String] key Routing key
+      #
+      # @api public
+      #
+      def deliver(payload, opts, key)
 
-				@routes[key].publish payload, opts if @routes[key]
-			end
-		end
-	end
+        @routes[key].publish payload, opts if @routes[key]
+      end
+    end
+  end
 end

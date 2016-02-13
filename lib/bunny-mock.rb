@@ -20,31 +20,31 @@ require 'bunny_mock/exchanges/headers'
 #
 module BunnyMock
 
-	# AMQP protocol version
-	PROTOCOL_VERSION = AMQ::Protocol::PROTOCOL_VERSION
+  # AMQP protocol version
+  PROTOCOL_VERSION = AMQ::Protocol::PROTOCOL_VERSION
 
-	#
-	# API
-	#
+  #
+  # API
+  #
 
-	##
-	# Instantiate a new mock Bunny session
-	#
-	# @return [BunnyMock::Session] Session instance
-	# @api public
-	def self.new(*args)
+  ##
+  # Instantiate a new mock Bunny session
+  #
+  # @return [BunnyMock::Session] Session instance
+  # @api public
+  def self.new(*args)
 
-		# return new mock session
-		BunnyMock::Session.new
-	end
+    # return new mock session
+    BunnyMock::Session.new
+  end
 
-	# @return [String] Bunny mock version
-	def self.version
-		VERSION
-	end
+  # @return [String] Bunny mock version
+  def self.version
+    VERSION
+  end
 
-	# @return [String] AMQP protocol version
-	def self.protocol_version
-		AMQ::Protocol::PROTOCOL_VERSION
-	end
+  # @return [String] AMQP protocol version
+  def self.protocol_version
+    AMQ::Protocol::PROTOCOL_VERSION
+  end
 end
