@@ -93,6 +93,25 @@ module BunnyMock
     alias channel create_channel
 
     ##
+    # Creates a temporary {BunnyMock::Channel} instance, yields it to
+    # the block given, then closes it
+    #
+    # @param [Integer] n Channel identifier
+    #
+    # @return [BunnyMock::Session] self
+    # @api public
+    def with_channel(n = nil)
+      ch = create_channel(n)
+      begin
+        yield ch
+      ensure
+        ch.close if ch.open?
+      end
+
+      self
+    end
+
+    ##
     # Test if queue exists in channel cache
     #
     # @param [String] name Name of queue

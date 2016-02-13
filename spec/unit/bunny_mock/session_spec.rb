@@ -76,4 +76,17 @@ describe BunnyMock::Session do
 			expect { @session.create_channel(0) }.to raise_error(ArgumentError)
 		end
 	end
+
+  context '#with_channel' do
+
+    it 'should close the channel after the block ends' do
+      channel = nil
+      @session.with_channel do |c|
+        channel = c
+        expect(channel.open?).to be_truthy
+      end
+
+      expect(channel.closed?).to be_truthy
+    end
+  end
 end
