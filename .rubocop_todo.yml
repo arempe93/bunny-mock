@@ -73,13 +73,6 @@ Style/EmptyLinesAroundModuleBody:
     - 'lib/bunny_mock/exceptions.rb'
     - 'lib/bunny_mock/version.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: AllowForAlignment, ForceEqualSignAlignment.
-Style/ExtraSpacing:
-  Exclude:
-    - 'lib/bunny_mock/exceptions.rb'
-
 # Offense count: 11
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
@@ -97,22 +90,6 @@ Style/FrozenStringLiteralComment:
     - 'lib/bunny_mock/queue.rb'
     - 'lib/bunny_mock/session.rb'
     - 'lib/bunny_mock/version.rb'
-
-# Offense count: 3
-# Cop supports --auto-correct.
-Style/MutableConstant:
-  Exclude:
-    - 'lib/bunny_mock/exchanges/topic.rb'
-    - 'lib/bunny_mock/version.rb'
-
-# Offense count: 1
-# Configuration parameters: NamePrefix, NamePrefixBlacklist, NameWhitelist.
-# NamePrefix: is_, has_, have_
-# NamePrefixBlacklist: is_, has_, have_
-# NameWhitelist: is_a?
-Style/PredicateName:
-  Exclude:
-    - 'lib/bunny_mock/exchange.rb'
 
 # Offense count: 6
 # Configuration parameters: EnforcedStyle, SupportedStyles.

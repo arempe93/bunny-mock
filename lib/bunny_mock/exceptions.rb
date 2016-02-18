@@ -5,12 +5,12 @@ module BunnyMock
   #
   # @api public
   #
-  class Exception < ::StandardError;  end
+  Exception = Class.new(StandardError)
 
   ##
   # Raised when a queue or exchange is not found
   #
   # @api public
   #
-  class NotFound < Exception; end
+  NotFound = Class.new(Exception)
 end

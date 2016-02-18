@@ -207,10 +207,10 @@ module BunnyMock
     #
     def bound_to?(exchange, opts = {})
 
-      if exchange.respond_to?(:has_binding?)
+      if exchange.respond_to?(:routes_to?)
 
         # we can find out on the exchange object
-        exchange.has_binding? self, opts
+        exchange.routes_to? self, opts
 
       else
 
@@ -230,12 +230,13 @@ module BunnyMock
     # @return [Boolean] true if the given queue or exchange matching options is bound to this exchange, false otherwise
     # @api public
     #
-    def has_binding?(exchange_or_queue, opts = {})
+    def routes_to?(exchange_or_queue, opts = {})
 
       route = exchange_or_queue.respond_to?(:name) ? exchange_or_queue.name : exchange_or_queue
 
       @routes.key? opts.fetch(:routing_key, route)
     end
+    alias has_binding? routes_to?
 
     ##
     # Deliver a message to routes

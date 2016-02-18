@@ -140,15 +140,15 @@ module BunnyMock
 
       check_queue_deleted!
 
-      if exchange.respond_to?(:has_binding?)
+      if exchange.respond_to?(:routes_to?)
 
         # we can do the check ourselves
-        exchange.has_binding? opts.fetch(:routing_key, @name)
+        exchange.routes_to? opts.fetch(:routing_key, @name)
 
       else
 
         # we need the channel to lookup the exchange
-        @channel.xchg_has_binding? opts.fetch(:routing_key, @name), exchange
+        @channel.xchg_routes_to? opts.fetch(:routing_key, @name), exchange
       end
     end
 

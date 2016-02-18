@@ -260,17 +260,17 @@ module BunnyMock
 
       raise NotFound.new "Exchange '#{name}' was not found" unless source
 
-      source.has_binding? receiver, routing_key: key
+      source.routes_to? receiver, routing_key: key
     end
 
     # @private
-    def xchg_has_binding?(key, xchg)
+    def xchg_routes_to?(key, xchg)
 
       exchange = @connection.find_exchange xchg
 
       raise NotFound.new "Exchange '#{xchg}' was not found" unless exchange
 
-      exchange.has_binding? key
+      exchange.routes_to? key
     end
 
     # @private

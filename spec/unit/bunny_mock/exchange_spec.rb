@@ -40,7 +40,7 @@ describe BunnyMock::Exchange do
 			@receiver.bind @source
 
 			expect(@receiver.bound_to?(@source)).to be_truthy
-			expect(@source.has_binding?(@receiver)).to be_truthy
+			expect(@source.routes_to?(@receiver)).to be_truthy
 		end
 
 		it 'should bind by exchange name' do
@@ -48,7 +48,7 @@ describe BunnyMock::Exchange do
 			@receiver.bind @source.name
 
 			expect(@receiver.bound_to?(@source)).to be_truthy
-			expect(@source.has_binding?(@receiver)).to be_truthy
+			expect(@source.routes_to?(@receiver)).to be_truthy
 		end
 
 		it 'should raise error when exchange does not exists' do
@@ -71,7 +71,7 @@ describe BunnyMock::Exchange do
 			@receiver.unbind @source
 
 			expect(@receiver.bound_to?(@source)).to be_falsey
-			expect(@source.has_binding?(@receiver)).to be_falsey
+			expect(@source.routes_to?(@receiver)).to be_falsey
 		end
 
 		it 'should unbind by exchange name' do
@@ -79,7 +79,7 @@ describe BunnyMock::Exchange do
 			@receiver.unbind @source.name
 
 			expect(@receiver.bound_to?(@source)).to be_falsey
-			expect(@source.has_binding?(@receiver)).to be_falsey
+			expect(@source.routes_to?(@receiver)).to be_falsey
 		end
 
 		it 'should raise error when exchange does not exists' do
@@ -131,7 +131,7 @@ describe BunnyMock::Exchange do
 		end
 	end
 
-	context '#has_binding?' do
+	context '#routes_to?' do
 
 		before do
 			@source = @channel.exchange 'xchg.source'
@@ -145,7 +145,7 @@ describe BunnyMock::Exchange do
 			@receiver.unbind @source
 
 			expect(@receiver.bound_to?(@source)).to be_falsey
-			expect(@source.has_binding?(@receiver)).to be_falsey
+			expect(@source.routes_to?(@receiver)).to be_falsey
 		end
 
 		it 'should unbind by exchange name' do
@@ -153,7 +153,7 @@ describe BunnyMock::Exchange do
 			@receiver.unbind @source.name
 
 			expect(@receiver.bound_to?(@source)).to be_falsey
-			expect(@source.has_binding?(@receiver)).to be_falsey
+			expect(@source.routes_to?(@receiver)).to be_falsey
 		end
 	end
 
