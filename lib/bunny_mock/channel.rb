@@ -25,17 +25,17 @@ module BunnyMock
     def initialize(connection = nil, id = nil)
 
       # store channel id
-      @id       = id
+      @id = id
 
       # store connection information
-      @connection   = connection
+      @connection = connection
 
       # initialize exchange and queue storage
-      @exchanges    = Hash.new
-      @queues     = Hash.new
+      @exchanges = {}
+      @queues    = {}
 
       # set status to opening
-      @status     = :opening
+      @status = :opening
     end
 
     # @return [Boolean] true if status is open, false otherwise

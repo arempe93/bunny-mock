@@ -18,6 +18,12 @@ Gem::Specification.new do |s|
 	# Dependencies
 	s.add_dependency 'amq-protocol', '>= 2.0.1'
 
+  # Development
+  s.add_development_dependency 'rubocop'
+  s.add_development_dependency 'yard'
+  s.add_development_dependency 'rspec', '~> 3.4.0'
+  s.add_development_dependency 'coveralls'
+
 	# Files
 	s.has_rdoc = true
 	s.extra_rdoc_files = [ 'README.md' ]
