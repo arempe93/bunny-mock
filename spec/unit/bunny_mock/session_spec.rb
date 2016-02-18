@@ -47,7 +47,7 @@ describe BunnyMock::Session do
       @session.start
       @session.stop
 
-      expect(@session.status).to eq(:closedr)
+      expect(@session.status).to eq(:closed)
       expect(@session.open?).to be_falsey
     end
   end
