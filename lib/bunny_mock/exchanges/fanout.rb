@@ -15,9 +15,9 @@ module BunnyMock
       #
       # @api public
       #
-      def deliver(payload, opts, key)
+      def deliver(payload, opts, _key)
 
-        @routes.each do |route, destination|
+        @routes.each_value do |destination|
 
           # send to all routes
           destination.publish payload, opts

@@ -52,19 +52,19 @@ module BunnyMock
     def initialize(channel, name, type, opts)
 
       # store creation information
-      @channel    = channel
+      @channel  = channel
       @name     = name
       @opts     = opts
       @type     = type
 
       # get options
-      @durable    = @opts[:durable]
+      @durable      = @opts[:durable]
       @auto_delete  = @opts[:auto_delete]
-      @internal   = @opts[:internal]
+      @internal     = @opts[:internal]
       @arguments    = @opts[:arguments]
 
       # create binding storage
-      @routes     = Hash.new
+      @routes = {}
     end
 
     # @group Bunny API
@@ -132,11 +132,9 @@ module BunnyMock
     ##
     # Delete this exchange
     #
-    # @param [Hash] opts Options (insignificant)
-    #
     # @api public
     #
-    def delete(opts = {})
+    def delete(*)
 
       @channel.deregister_exchange self
 

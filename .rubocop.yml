@@ -3,5 +3,7 @@ AllCops:
   DisplayCopNames: true
   Include:
     - 'lib/**/*'
+  Exclude:
+    - 'spec/**/*'
 
 inherit_from: .rubocop_todo.yml

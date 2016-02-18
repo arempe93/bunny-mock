@@ -19,17 +19,17 @@ module BunnyMock
     # Creates a new {BunnyMock::Session} instance
     #
     # @api public
-    def initialize(*args)
+    def initialize(*)
 
       # not connected until {BunnyMock::Session#start} is called
-      @status   = :not_connected
+      @status = :not_connected
 
       # create channel hash
-      @channels = Hash.new
+      @channels = {}
 
       # create storage for queues and exchanges
-      @queues   = Hash.new
-      @exchanges  = Hash.new
+      @queues = {}
+      @exchanges = {}
     end
 
     ##
@@ -75,13 +75,13 @@ module BunnyMock
     #
     # @return [BunnyMock::Channel] Channel instance
     # @api public
-    def create_channel(n = nil, pool_size = 1)
+    def create_channel(n = nil, _pool_size = 1)
 
       # raise same error as {Bunny::Session#create_channel}
-      raise ArgumentError, "channel number 0 is reserved in the protocol and cannot be used" if n == 0
+      raise ArgumentError, 'channel number 0 is reserved in the protocol and cannot be used' if n == 0
 
       # return cached channel if exists
-      return @channels[n] if n and @channels.key?(n)
+      return @channels[n] if n && @channels.key?(n)
 
       # create and open channel
       channel = Channel.new self, n
@@ -120,7 +120,7 @@ module BunnyMock
     # @api public
     #
     def queue_exists?(name)
-      !!find_queue(name)
+      !find_queue(name).nil?
     end
 
     ##
@@ -132,7 +132,7 @@ module BunnyMock
     # @api public
     #
     def exchange_exists?(name)
-      !!find_exchange(name)
+      !find_exchange(name).nil?
     end
 
     #

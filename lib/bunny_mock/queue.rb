@@ -26,12 +26,12 @@ module BunnyMock
     def initialize(channel, name = '', opts = {})
 
       # Store creation information
-      @channel  = channel
-      @name   = name
-      @opts   = opts
+      @channel = channel
+      @name = name
+      @opts = opts
 
       # Store messages
-      @messages = Array.new
+      @messages = []
     end
 
     # @group Bunny API

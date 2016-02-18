@@ -32,7 +32,7 @@ module BunnyMock
   #
   # @return [BunnyMock::Session] Session instance
   # @api public
-  def self.new(*args)
+  def self.new(*)
 
     # return new mock session
     BunnyMock::Session.new
