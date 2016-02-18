@@ -69,12 +69,12 @@ it 'should route messages from exchanges' do
     channel = BunnyMock.new.start.channel
 
     xchg = channel.topic 'xchg.topic'
-	queue = channel.queue 'queue.test'
+    queue = channel.queue 'queue.test'
 
     xchg.publish 'Routed message', routing_key: '*.test'
 
     expect(queue.message_count).to eq(1)
-	expect(queue.pop[:message]).to eq('Routed message')
+    expect(queue.pop[:message]).to eq('Routed message')
 end
 ```
 
@@ -110,15 +110,15 @@ it 'should bind exchanges to exchanges' do
 
 	receiver.bind source
 	expect(receiver.bound_to?(source)).to be_truthy
-	expect(source.has_binding?(receiver)).to be_truthy
+	expect(source.routes_to?(receiver)).to be_truthy
 
 	receiver.unbind source
 	expect(receiver.bound_to?(source)).to be_falsey
-	expect(xchg.has_binding?(receiver)).to be_falsey
+	expect(xchg.routes_to?(receiver)).to be_falsey
 
 	receiver.bind 'xchg.source'
 	expect(receiver.bound_to?(source)).to be_truthy
-	expect(source.has_binding?(receiver)).to be_truthy
+	expect(source.routes_to?(receiver)).to be_truthy
 end
 ```
 
