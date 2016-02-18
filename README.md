@@ -90,15 +90,15 @@ it 'should bind queues to exchanges' do
 
 	queue.bind xchg
 	expect(queue.bound_to?(xchg)).to be_truthy
-	expect(xchg.has_binding?(queue)).to be_truthy
+	expect(xchg.routes_to?(queue)).to be_truthy
 
 	queue.unbind xchg
 	expect(queue.bound_to?(xchg)).to be_falsey
-	expect(xchg.has_binding?(queue)).to be_falsey
+	expect(xchg.routes_to?(queue)).to be_falsey
 
 	queue.bind 'xchg.test'
 	expect(queue.bound_to?(xchg)).to be_truthy
-	expect(xchg.has_binding?(queue)).to be_truthy
+	expect(xchg.routes_to?(queue)).to be_truthy
 end
 
 it 'should bind exchanges to exchanges' do
