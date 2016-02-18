@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'amq-protocol', '>= 2.0.1'
 
+  s.add_development_dependency 'rake'
   s.add_development_dependency 'rubocop'
   s.add_development_dependency 'yard'
   s.add_development_dependency 'rspec', '~> 3.4.0'
