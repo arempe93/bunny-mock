@@ -1,6 +1,7 @@
 ## v1.2.0
 
-* Renames `Exchange#has_binding?` to `Exchange#has_routes?`
+* Adds `with_channel` functionality to `BunnyMock::Session`
+* Renames `BunnyMock::Exchange#has_binding?` to `BunnyMock::Exchange#has_routes?`
 
 ## v1.1.0
 
