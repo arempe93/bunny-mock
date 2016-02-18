@@ -239,7 +239,7 @@ module BunnyMock
 
       exchange = @connection.find_exchange xchg
 
-      raise NotFound, "Exchange '#{xchg}' was not found" unless exchange
+      raise Bunny::NotFound.new("Exchange '#{xchg}' was not found", self, false) unless exchange
 
       exchange.add_route key, queue
     end
@@ -249,7 +249,7 @@ module BunnyMock
 
       exchange = @connection.find_exchange xchg
 
-      raise NotFound, "Exchange '#{xchg}' was not found" unless exchange
+      raise Bunny::NotFound.new("Exchange '#{xchg}' was not found", self, false) unless exchange
 
       exchange.remove_route key
     end
@@ -259,7 +259,7 @@ module BunnyMock
 
       source = @connection.find_exchange name
 
-      raise NotFound, "Exchange '#{name}' was not found" unless source
+      raise Bunny::NotFound.new("Exchange '#{name}' was not found", self, false) unless source
 
       source.routes_to? receiver, routing_key: key
     end
@@ -269,7 +269,7 @@ module BunnyMock
 
       exchange = @connection.find_exchange xchg
 
-      raise NotFound, "Exchange '#{xchg}' was not found" unless exchange
+      raise Bunny::NotFound.new("Exchange '#{xchg}' was not found", self, false) unless exchange
 
       exchange.routes_to? key
     end
@@ -279,7 +279,7 @@ module BunnyMock
 
       source = @connection.find_exchange name
 
-      raise NotFound, "Exchange '#{name}' was not found" unless source
+      raise Bunny::NotFound.new("Exchange '#{name}' was not found", self, false) unless source
 
       source.add_route routing_key, receiver
     end
@@ -289,7 +289,7 @@ module BunnyMock
 
       source = @connection.find_exchange name
 
-      raise NotFound, "Exchange '#{name}' was not found" unless source
+      raise Bunny::NotFound.new("Exchange '#{name}' was not found", self, false) unless source
 
       source.remove_route routing_key
     end

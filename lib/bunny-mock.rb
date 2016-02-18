@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 require 'bunny_mock/version'
-require 'amq/protocol/client'
 
-require 'bunny_mock/exceptions'
+require 'bunny/exceptions'
+require 'amq/protocol/client'
 
 require 'bunny_mock/session'
 require 'bunny_mock/channel'

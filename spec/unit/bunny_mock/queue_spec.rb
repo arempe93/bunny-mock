@@ -41,7 +41,7 @@ describe BunnyMock::Queue do
 
 		it 'should raise error when exchange does not exists' do
 
-			expect { @receiver.bind('this.xchg.does.not.exist') }.to raise_exception(BunnyMock::NotFound)
+			expect { @receiver.bind('this.xchg.does.not.exist') }.to raise_exception(Bunny::NotFound)
 		end
 	end
 
@@ -72,7 +72,7 @@ describe BunnyMock::Queue do
 
 		it 'should raise error when exchange does not exists' do
 
-			expect { @receiver.unbind('this.xchg.does.not.exist') }.to raise_exception(BunnyMock::NotFound)
+			expect { @receiver.unbind('this.xchg.does.not.exist') }.to raise_exception(Bunny::NotFound)
 		end
 	end
 
@@ -115,7 +115,7 @@ describe BunnyMock::Queue do
 
 		it 'should raise error when exchange does not exists' do
 
-			expect { @receiver.bound_to?('this.xchg.does.not.exist') }.to raise_exception(BunnyMock::NotFound)
+			expect { @receiver.bound_to?('this.xchg.does.not.exist') }.to raise_exception(Bunny::NotFound)
 		end
 	end
 
