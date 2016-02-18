@@ -92,5 +92,18 @@ describe BunnyMock::Session do
 
       expect(channel.closed?).to be_truthy
     end
+
+    it 'should close the channel if an exception is raised' do
+      channel = nil
+
+      expect do
+        @session.with_channel do |c|
+          channel = c
+          raise 'Whoops!'
+        end
+      end.to raise_error('Whoops!')
+
+      expect(channel.closed?).to be_truthy
+    end
   end
 end
