@@ -4,91 +4,87 @@ describe BunnyMock::Session do
     @session = BunnyMock::Session.new
   end
 
-	context '::new' do
+  context '::new' do
 
-		it 'should start as not connected' do
+    it 'should start as not connected' do
 
-			expect(@session.status).to eq(:not_connected)
-		end
-	end
+      expect(@session.status).to eq(:not_connected)
+    end
+  end
 
-	context '#start' do
+  context '#start' do
 
-		it 'should set status to connected' do
+    it 'should set status to connected' do
 
-			expect(@session.start.status).to eq(:connected)
-		end
-	end
+      expect(@session.start.status).to eq(:connected)
+    end
+  end
 
-	context '#stop (close)' do
+  context '#stop (close)' do
 
-		it 'should set status to closed' do
+    it 'should set status to closed' do
 
-			@session.start
+      @session.start
 
-			expect(@session.stop.status).to eq(:closed)
-		end
-	end
+      expect(@session.stop.status).to eq(:closed)
+    end
+  end
 
-	context '#open?' do
+  context '#open?' do
 
-		it 'should return true if status is open' do
+    it 'should return true if status is open' do
 
-			@session.start
+      @session.start
 
-			expect(@session.open?).to be_truthy
-		end
+      expect(@session.open?).to be_truthy
+    end
 
-		it 'should return false otherwise' do
+    it 'should return false otherwise' do
 
-			# not_connected
-			expect(@session.open?).to be_falsey
+      expect(@session.status).to eq(:not_connected)
+      expect(@session.open?).to be_falsey
 
-			@session.stop
+      @session.start
+      @session.stop
 
-			# closed
-			expect(@session.open?).to be_falsey
-		end
-	end
+      expect(@session.status).to eq(:closedr)
+      expect(@session.open?).to be_falsey
+    end
+  end
 
-	context '#create_channel (channel)' do
+  context '#create_channel (channel)' do
 
-		it 'should create a new channel with no arguments' do
+    it 'should create a new channel with no arguments' do
 
-			first = @session.create_channel
-			second = @session.create_channel
+      first = @session.create_channel
+      second = @session.create_channel
 
-			expect(first.class).to eq(BunnyMock::Channel)
-			expect(second.class).to eq(BunnyMock::Channel)
+      expect(first.class).to eq(BunnyMock::Channel)
+      expect(second.class).to eq(BunnyMock::Channel)
 
-			expect(first).to_not eq(second)
-		end
+      expect(first).to_not eq(second)
+    end
 
-		it 'should return cached channel with same identifier' do
+    it 'should return cached channel with same identifier' do
 
-			first = @session.create_channel 1
-			second = @session.create_channel 1
+      first = @session.create_channel 1
+      second = @session.create_channel 1
 
-			expect(first.class).to eq(BunnyMock::Channel)
-			expect(second.class).to eq(BunnyMock::Channel)
+      expect(first).to eq(second)
+    end
 
-			expect(first).to eq(second)
-		end
+    it 'should return an ArgumentError for reserved channel' do
 
-		it 'should return an ArgumentError for reserved channel' do
-
-			expect { @session.create_channel(0) }.to raise_error(ArgumentError)
-		end
-	end
+      expect { @session.create_channel(0) }.to raise_error(ArgumentError)
+    end
+  end
 
   context '#with_channel' do
 
     it 'should close the channel after the block ends' do
       channel = nil
-      @session.with_channel do |c|
-        channel = c
-        expect(channel.open?).to be_truthy
-      end
+
+      @session.with_channel { |c| channel = c }
 
       expect(channel.closed?).to be_truthy
     end
