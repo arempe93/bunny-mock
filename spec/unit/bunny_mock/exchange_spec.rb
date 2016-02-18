@@ -28,6 +28,12 @@ describe BunnyMock::Exchange do
 		end
 	end
 
+  context '#durable?' do
+    it 'should respond' do
+      expect(@channel.exchange('xchg', durable: true).durable?).to be_truthy
+    end
+  end
+
 	context '#bind' do
 
 		before do

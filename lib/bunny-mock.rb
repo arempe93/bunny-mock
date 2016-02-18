@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'bunny_mock/version'
 require 'amq/protocol/client'
 

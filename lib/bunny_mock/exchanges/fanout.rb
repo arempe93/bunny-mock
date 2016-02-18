@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module BunnyMock
   module Exchanges
     class Fanout < BunnyMock::Exchange
@@ -17,11 +18,7 @@ module BunnyMock
       #
       def deliver(payload, opts, _key)
 
-        @routes.each_value do |destination|
-
-          # send to all routes
-          destination.publish payload, opts
-        end
+        @routes.each_value { |destination| destination.publish(payload, opts) }
       end
     end
   end

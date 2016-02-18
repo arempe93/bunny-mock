@@ -1,14 +1,15 @@
+# frozen_string_literal: true
 module BunnyMock
   module Exchanges
     class Topic < BunnyMock::Exchange
 
       # @private
       # @return [String] Multiple subdomain wildcard
-      MULTI_WILDCARD = '#'.freeze
+      MULTI_WILDCARD = '#'
 
       # @private
       # @return [String] Single subdomain wildcard
-      SINGLE_WILDCARD = '*'.freeze
+      SINGLE_WILDCARD = '*'
 
       #
       # API
@@ -26,24 +27,19 @@ module BunnyMock
       def deliver(payload, opts, key)
 
         # escape periods with backslash for regex
-        key.gsub! '.', '\.'
+        key.gsub!('.', '\.')
 
         # replace single wildcards with regex for a single domain
-        key.gsub! SINGLE_WILDCARD, '(\w+)'
+        key.gsub!(SINGLE_WILDCARD, '(?:\w+)')
 
         # replace multi wildcards with regex for many domains separated by '.'
-        key.gsub! MULTI_WILDCARD, '\w+\.?'
+        key.gsub!(MULTI_WILDCARD, '\w+\.?')
 
         # turn key into regex
-        key = Regexp.new key
+        key = Regexp.new(key)
 
-        # get all route keys for this exchange
-        delivery_keys = @routes.keys.dup
-
-        delivery_keys.each do |route|
-
-          # deliver to all matches
-          @routes[route].publish payload, opts if route =~ key
+        @routes.each do |route, destination|
+          destination.publish(payload, opts) if route =~ key
         end
       end
     end

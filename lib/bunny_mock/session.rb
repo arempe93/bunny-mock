@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module BunnyMock
   # Mocks Bunny::Session
   class Session
@@ -28,7 +29,7 @@ module BunnyMock
       @channels = {}
 
       # create storage for queues and exchanges
-      @queues = {}
+      @queues    = {}
       @exchanges = {}
     end
 

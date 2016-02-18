@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module BunnyMock
   module Exchanges
     class Direct < BunnyMock::Exchange

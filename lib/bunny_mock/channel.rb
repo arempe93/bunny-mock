@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module BunnyMock
   class Channel
 
@@ -78,7 +79,7 @@ module BunnyMock
 
     # @return [String] Object representation
     def to_s
-      "#<#{self.class.name}:#{self.object_id} @id=#{@id} @open=#{open?}>"
+      "#<#{self.class.name}:#{object_id} @id=#{@id} @open=#{open?}>"
     end
     alias inspect to_s
 
@@ -119,7 +120,7 @@ module BunnyMock
     # @api public
     #
     def fanout(name, opts = {})
-      self.exchange name, opts.merge(type: :fanout)
+      exchange name, opts.merge(type: :fanout)
     end
 
     ##
@@ -136,7 +137,7 @@ module BunnyMock
     # @api public
     #
     def direct(name, opts = {})
-      self.exchange name, opts.merge(type: :direct)
+      exchange name, opts.merge(type: :direct)
     end
 
     ##
@@ -153,7 +154,7 @@ module BunnyMock
     # @api public
     #
     def topic(name, opts = {})
-      self.exchange name, opts.merge(type: :topic)
+      exchange name, opts.merge(type: :topic)
     end
 
     ##
@@ -170,7 +171,7 @@ module BunnyMock
     # @api public
     #
     def header(name, opts = {})
-      self.exchange name, opts.merge(type: :header)
+      exchange name, opts.merge(type: :header)
     end
 
     ##
@@ -180,7 +181,7 @@ module BunnyMock
     # @api public
     #
     def default_exchange
-      self.direct '', no_declare: true
+      direct '', no_declare: true
     end
 
     # @endgroup
@@ -238,7 +239,7 @@ module BunnyMock
 
       exchange = @connection.find_exchange xchg
 
-      raise NotFound.new "Exchange '#{xchg}' was not found" unless exchange
+      raise NotFound, "Exchange '#{xchg}' was not found" unless exchange
 
       exchange.add_route key, queue
     end
@@ -248,7 +249,7 @@ module BunnyMock
 
       exchange = @connection.find_exchange xchg
 
-      raise NotFound.new "Exchange '#{xchg}' was not found" unless exchange
+      raise NotFound, "Exchange '#{xchg}' was not found" unless exchange
 
       exchange.remove_route key
     end
@@ -258,7 +259,7 @@ module BunnyMock
 
       source = @connection.find_exchange name
 
-      raise NotFound.new "Exchange '#{name}' was not found" unless source
+      raise NotFound, "Exchange '#{name}' was not found" unless source
 
       source.routes_to? receiver, routing_key: key
     end
@@ -268,7 +269,7 @@ module BunnyMock
 
       exchange = @connection.find_exchange xchg
 
-      raise NotFound.new "Exchange '#{xchg}' was not found" unless exchange
+      raise NotFound, "Exchange '#{xchg}' was not found" unless exchange
 
       exchange.routes_to? key
     end
@@ -278,7 +279,7 @@ module BunnyMock
 
       source = @connection.find_exchange name
 
-      raise NotFound.new "Exchange '#{name}' was not found" unless source
+      raise NotFound, "Exchange '#{name}' was not found" unless source
 
       source.add_route routing_key, receiver
     end
@@ -288,7 +289,7 @@ module BunnyMock
 
       source = @connection.find_exchange name
 
-      raise NotFound.new "Exchange '#{name}' was not found" unless source
+      raise NotFound, "Exchange '#{name}' was not found" unless source
 
       source.remove_route routing_key
     end

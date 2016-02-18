@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module BunnyMock
   class Queue
 
@@ -27,8 +28,8 @@ module BunnyMock
 
       # Store creation information
       @channel = channel
-      @name = name
-      @opts = opts
+      @name    = name
+      @opts    = opts
 
       # Store messages
       @messages = []
