@@ -153,7 +153,7 @@ View the documentation on [RubyDoc](http://www.rubydoc.info/github/arempe93/bunn
 
 * Ruby version >= 2.0
 
-* [AMQ Protocol](https://github.com/ruby-amqp/amq-protocol) - Also a dependency of Bunny
+* [Bunny](https://github.com/ruby-amqp/bunny) - To use original exception classes
 
 ## License
 
