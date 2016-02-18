@@ -1,5 +1,9 @@
 describe BunnyMock::Session do
 
+  before do
+    @session = BunnyMock::Session.new
+  end
+
 	context '::new' do
 
 		it 'should start as not connected' do

@@ -14,7 +14,7 @@ require 'bunny-mock'
 RSpec.configure do |config|
 
 	config.before :each do
-		@session = BunnyMock::Session.new
+		@session = BunnyMock.new.start
 		@channel = @session.channel
 	end
 end
