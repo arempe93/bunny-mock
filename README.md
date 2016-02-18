@@ -14,7 +14,12 @@ BunnyMock can be injected into your RabbitMQ application in place of Bunny for t
 
 ```ruby
 require 'bunny-mock'
-RabbitFactory.connection = BunnyMock.new.start
+
+RSpec.configure do |config|
+  config.before(:each) do
+    RabbitFactory.connection = BunnyMock.new.start
+  end
+end
 ```
 
 For an example, easy to mock setup, check out [this helper](https://github.com/arempe93/amqp-example/blob/master/lib/amqp/factory.rb)
@@ -28,20 +33,20 @@ Here are some examples showcasing what BunnyMock can do
 ```ruby
 it 'should create queues and exchanges' do
 
-    session = BunnyMock.new.start
-    channel = session.channel
+  session = BunnyMock.new.start
+  channel = session.channel
 
-    queue = channel.queue 'queue.test'
-    expect(session.queue_exists?('queue.test')).to be_truthy
+  queue = channel.queue 'queue.test'
+  expect(session.queue_exists?('queue.test')).to be_truthy
 
-    queue.delete
-    expect(session.queue_exists?('queue.test')).to be_falsey
+  queue.delete
+  expect(session.queue_exists?('queue.test')).to be_falsey
 
-    xchg = channel.exchange 'xchg.test'
-    expect(session.exchange_exists?('exchange.test')).to be_truthy
+  xchg = channel.exchange 'xchg.test'
+  expect(session.exchange_exists?('exchange.test')).to be_truthy
 
-    xchg.delete
-    expect(session.exchange_exists?('exchange.test')).to be_falsey
+  xchg.delete
+  expect(session.exchange_exists?('exchange.test')).to be_falsey
 end
 ```
 
@@ -50,31 +55,31 @@ end
 ```ruby
 it 'should publish messages to queues' do
 
-	channel = BunnyMock.new.start.channel
-	queue = channel.queue 'queue.test'
+  channel = BunnyMock.new.start.channel
+  queue = channel.queue 'queue.test'
 
-	queue.publish 'Testing message', priority: 5
+  queue.publish 'Testing message', priority: 5
 
-	expect(queue.message_count).to eq(1)
+  expect(queue.message_count).to eq(1)
 
-	payload = queue.pop
-	expect(queue.message_count).to eq(0)
+  payload = queue.pop
+  expect(queue.message_count).to eq(0)
 
-	expect(payload[:message]).to eq('Testing message')
-	expect(payload[:options][:priority]).to eq(5)
+  expect(payload[:message]).to eq('Testing message')
+  expect(payload[:options][:priority]).to eq(5)
 end
 
 it 'should route messages from exchanges' do
 
-    channel = BunnyMock.new.start.channel
+  channel = BunnyMock.new.start.channel
 
-    xchg = channel.topic 'xchg.topic'
-    queue = channel.queue 'queue.test'
+  xchg = channel.topic 'xchg.topic'
+  queue = channel.queue 'queue.test'
 
-    xchg.publish 'Routed message', routing_key: '*.test'
+  xchg.publish 'Routed message', routing_key: '*.test'
 
-    expect(queue.message_count).to eq(1)
-    expect(queue.pop[:message]).to eq('Routed message')
+  expect(queue.message_count).to eq(1)
+  expect(queue.pop[:message]).to eq('Routed message')
 end
 ```
 
@@ -83,42 +88,42 @@ end
 ```ruby
 it 'should bind queues to exchanges' do
 
-	channel = BunnyMock.new.start.channel
+  channel = BunnyMock.new.start.channel
 
-	queue = channel.queue 'queue.test'
-	xchg = channel.exchange 'xchg.test'
+  queue = channel.queue 'queue.test'
+  xchg = channel.exchange 'xchg.test'
 
-	queue.bind xchg
-	expect(queue.bound_to?(xchg)).to be_truthy
-	expect(xchg.routes_to?(queue)).to be_truthy
+  queue.bind xchg
+  expect(queue.bound_to?(xchg)).to be_truthy
+  expect(xchg.routes_to?(queue)).to be_truthy
 
-	queue.unbind xchg
-	expect(queue.bound_to?(xchg)).to be_falsey
-	expect(xchg.routes_to?(queue)).to be_falsey
+  queue.unbind xchg
+  expect(queue.bound_to?(xchg)).to be_falsey
+  expect(xchg.routes_to?(queue)).to be_falsey
 
-	queue.bind 'xchg.test'
-	expect(queue.bound_to?(xchg)).to be_truthy
-	expect(xchg.routes_to?(queue)).to be_truthy
+  queue.bind 'xchg.test'
+  expect(queue.bound_to?(xchg)).to be_truthy
+  expect(xchg.routes_to?(queue)).to be_truthy
 end
 
 it 'should bind exchanges to exchanges' do
 
-	channel = BunnyMock.new.start.channel
+  channel = BunnyMock.new.start.channel
 
-	source = channel.exchange 'xchg.source'
-	receiver = channel.exchange 'xchg.receiver'
+  source = channel.exchange 'xchg.source'
+  receiver = channel.exchange 'xchg.receiver'
 
-	receiver.bind source
-	expect(receiver.bound_to?(source)).to be_truthy
-	expect(source.routes_to?(receiver)).to be_truthy
+  receiver.bind source
+  expect(receiver.bound_to?(source)).to be_truthy
+  expect(source.routes_to?(receiver)).to be_truthy
 
-	receiver.unbind source
-	expect(receiver.bound_to?(source)).to be_falsey
-	expect(xchg.routes_to?(receiver)).to be_falsey
+  receiver.unbind source
+  expect(receiver.bound_to?(source)).to be_falsey
+  expect(xchg.routes_to?(receiver)).to be_falsey
 
-	receiver.bind 'xchg.source'
-	expect(receiver.bound_to?(source)).to be_truthy
-	expect(source.routes_to?(receiver)).to be_truthy
+  receiver.bind 'xchg.source'
+  expect(receiver.bound_to?(source)).to be_truthy
+  expect(source.routes_to?(receiver)).to be_truthy
 end
 ```
 
