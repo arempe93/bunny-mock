@@ -10,19 +10,19 @@ A mock client for RabbitMQ, modeled after the popular [Bunny client](https://git
 
 ## Usage
 
-BunnyMock can be injected into your RabbitMQ application in place of Bunny for testing. For example, if you have a helper module named `RabbitFactory`, some code similar to the following placed in `spec_helper` or `test_helper` or what have you is all you need to start using BunnyMock to test your RabbitMQ application
+BunnyMock can be injected into your RabbitMQ application in place of Bunny for testing. For example, if you have a helper module named `AMQFactory`, some code similar to the following placed in `spec_helper` or `test_helper` or what have you is all you need to start using BunnyMock to test your RabbitMQ application
 
 ```ruby
 require 'bunny-mock'
 
 RSpec.configure do |config|
   config.before(:each) do
-    RabbitFactory.connection = BunnyMock.new.start
+    AMQFactory.connection = BunnyMock.new.start
   end
 end
 ```
 
-For an example, easy to mock setup, check out [this helper](https://github.com/arempe93/amqp-example/blob/master/lib/amqp/factory.rb)
+For an example, easy to mock setup, check out [this helper](https://gist.github.com/arempe93/8143edb17c57666e738f)
 
 ## Examples
 
