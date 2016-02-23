@@ -7,7 +7,6 @@ describe BunnyMock::Session do
   context '::new' do
 
     it 'should start as not connected' do
-
       expect(@session.status).to eq(:not_connected)
     end
   end
@@ -15,7 +14,6 @@ describe BunnyMock::Session do
   context '#start' do
 
     it 'should set status to connected' do
-
       expect(@session.start.status).to eq(:connected)
     end
   end
@@ -23,9 +21,7 @@ describe BunnyMock::Session do
   context '#stop (close)' do
 
     it 'should set status to closed' do
-
       @session.start
-
       expect(@session.stop.status).to eq(:closed)
     end
   end
@@ -33,14 +29,11 @@ describe BunnyMock::Session do
   context '#open?' do
 
     it 'should return true if status is open' do
-
       @session.start
-
       expect(@session.open?).to be_truthy
     end
 
     it 'should return false otherwise' do
-
       expect(@session.status).to eq(:not_connected)
       expect(@session.open?).to be_falsey
 
@@ -55,7 +48,6 @@ describe BunnyMock::Session do
   context '#create_channel (channel)' do
 
     it 'should create a new channel with no arguments' do
-
       first = @session.create_channel
       second = @session.create_channel
 
@@ -66,7 +58,6 @@ describe BunnyMock::Session do
     end
 
     it 'should return cached channel with same identifier' do
-
       first = @session.create_channel 1
       second = @session.create_channel 1
 
@@ -74,7 +65,6 @@ describe BunnyMock::Session do
     end
 
     it 'should return an ArgumentError for reserved channel' do
-
       expect { @session.create_channel(0) }.to raise_error(ArgumentError)
     end
   end
@@ -83,7 +73,6 @@ describe BunnyMock::Session do
 
     it 'should close the channel after the block ends' do
       channel = nil
-
       @session.with_channel { |c| channel = c }
 
       expect(channel.closed?).to be_truthy
