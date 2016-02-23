@@ -45,6 +45,21 @@ module BunnyMock
     # @return [Hash] Creation options
     attr_reader :opts
 
+    # @return [Boolean] If the exchange was declared as durable
+    attr_reader :durable
+    alias durable? durable
+
+    # @return [Boolean] If the exchange was declared with auto deletion
+    attr_reader :auto_delete
+    alias auto_delete? auto_delete
+
+    # @return [Boolean] If the exchange was declared as internal
+    attr_reader :internal
+    alias internal? internal
+
+    # @return [Hash] Any additional declaration arguments
+    attr_reader :arguments
+
     # @private
     # @return [Boolean] If exchange has been deleted
     attr_reader :deleted
@@ -69,30 +84,6 @@ module BunnyMock
     end
 
     # @group Bunny API
-
-    # @return [Boolean] true if this exchange was declared as durable, false otherwise
-    # @api public
-    def durable?
-      @durable
-    end
-
-    # @return [Boolean] true if this exchange was set to auto delete, false otherwise
-    # @api public
-    def auto_delete?
-      @auto_delete
-    end
-
-    # @return [Boolean] true if this exchange was declared as internal, false otherwise
-    # @api public
-    def internal?
-      @internal
-    end
-
-    # @return [Hash] Additional option arguments
-    # @api public
-    def arguments
-      @arguments
-    end
 
     ##
     # Publish a message
