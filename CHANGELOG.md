@@ -1,7 +1,7 @@
 ## v1.2.0
 
 * Adds `with_channel` functionality to `BunnyMock::Session`
-* Renames `BunnyMock::Exchange#has_binding?` to `BunnyMock::Exchange#has_routes?`
+* Renames `BunnyMock::Exchange#has_binding?` to `BunnyMock::Exchange#routes_to?`
 * Adds `Bunny` as a dependency to use its exceptions
 
 ## v1.1.0
