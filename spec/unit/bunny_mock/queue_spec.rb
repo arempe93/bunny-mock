@@ -1,172 +1,154 @@
 describe BunnyMock::Queue do
 
-	before do
-		@queue = @channel.queue 'testing.q'
-	end
+  before do
+    @queue = @channel.queue 'testing.q'
+  end
 
-	context '#publish' do
+  context '#publish' do
 
-		it 'should add message' do
+    it 'should add message' do
+      @queue.publish 'This is a test message'
 
-			@queue.publish 'This is a test message'
+      expect(@queue.message_count).to eq(1)
+      expect(@queue.pop[:message]).to eq('This is a test message')
+      expect(@queue.message_count).to eq(0)
+    end
+  end
 
-			expect(@queue.message_count).to eq(1)
-			expect(@queue.pop[:message]).to eq('This is a test message')
-			expect(@queue.message_count).to eq(0)
-		end
-	end
+  context '#bind' do
 
-	context '#bind' do
+    before do
+      @source = @channel.exchange 'xchg.source'
+      @receiver = @channel.queue 'queue.receiver'
+    end
 
-		before do
-			@source = @channel.exchange 'xchg.source'
-			@receiver = @channel.queue 'queue.receiver'
-		end
+    it 'should bind by exchange instance' do
+      @receiver.bind @source
 
-		it 'should bind by exchange instance' do
+      expect(@receiver.bound_to?(@source)).to be_truthy
+      expect(@source.routes_to?(@receiver)).to be_truthy
+    end
 
-			@receiver.bind @source
+    it 'should bind by exchange name' do
+      @receiver.bind @source.name
 
-			expect(@receiver.bound_to?(@source)).to be_truthy
-			expect(@source.routes_to?(@receiver)).to be_truthy
-		end
+      expect(@receiver.bound_to?(@source)).to be_truthy
+      expect(@source.routes_to?(@receiver)).to be_truthy
+    end
 
-		it 'should bind by exchange name' do
+    it 'should raise error when exchange does not exists' do
+      expect { @receiver.bind('this.xchg.does.not.exist') }.to raise_exception(Bunny::NotFound)
+    end
+  end
 
-			@receiver.bind @source.name
+  context '#unbind' do
 
-			expect(@receiver.bound_to?(@source)).to be_truthy
-			expect(@source.routes_to?(@receiver)).to be_truthy
-		end
+    before do
+      @source = @channel.exchange 'xchg.source'
+      @receiver = @channel.queue 'queue.receiver'
 
-		it 'should raise error when exchange does not exists' do
+      @receiver.bind @source
+    end
 
-			expect { @receiver.bind('this.xchg.does.not.exist') }.to raise_exception(Bunny::NotFound)
-		end
-	end
+    it 'should unbind by exchange instance' do
+      @receiver.unbind @source
 
-	context '#unbind' do
+      expect(@receiver.bound_to?(@source)).to be_falsey
+      expect(@source.routes_to?(@receiver)).to be_falsey
+    end
 
-		before do
-			@source = @channel.exchange 'xchg.source'
-			@receiver = @channel.queue 'queue.receiver'
+    it 'should unbind by exchange name' do
+      @receiver.unbind @source.name
 
-			@receiver.bind @source
-		end
+      expect(@receiver.bound_to?(@source)).to be_falsey
+      expect(@source.routes_to?(@receiver)).to be_falsey
+    end
 
-		it 'should unbind by exchange instance' do
+    it 'should raise error when exchange does not exists' do
+      expect { @receiver.unbind('this.xchg.does.not.exist') }.to raise_exception(Bunny::NotFound)
+    end
+  end
 
-			@receiver.unbind @source
+  context '#bound_to?' do
 
-			expect(@receiver.bound_to?(@source)).to be_falsey
-			expect(@source.routes_to?(@receiver)).to be_falsey
-		end
+    before do
+      @source = @channel.exchange 'xchg.source'
+      @receiver = @channel.queue 'queue.receiver'
+    end
 
-		it 'should unbind by exchange name' do
+    context 'should return true if bound' do
 
-			@receiver.unbind @source.name
+      it 'by instance' do
+        @receiver.bind @source
+        expect(@receiver.bound_to?(@source)).to be_truthy
+      end
 
-			expect(@receiver.bound_to?(@source)).to be_falsey
-			expect(@source.routes_to?(@receiver)).to be_falsey
-		end
+      it 'by name' do
+        @receiver.bind @source
+        expect(@receiver.bound_to?(@source.name)).to be_truthy
+      end
 
-		it 'should raise error when exchange does not exists' do
+      it 'by routing key' do
+        @receiver.bind @source, routing_key: 'queue.route'
 
-			expect { @receiver.unbind('this.xchg.does.not.exist') }.to raise_exception(Bunny::NotFound)
-		end
-	end
+        expect(@receiver.bound_to?(@source)).to be_falsey
+        expect(@receiver.bound_to?(@source, routing_key: 'queue.route')).to be_truthy
+      end
+    end
 
-	context '#bound_to?' do
+    it 'return false otherwise' do
+      expect(@receiver.bound_to?(@source)).to be_falsey
+    end
 
-		before do
-			@source = @channel.exchange 'xchg.source'
-			@receiver = @channel.queue 'queue.receiver'
-		end
+    it 'should raise error when exchange does not exists' do
+      expect { @receiver.bound_to?('this.xchg.does.not.exist') }.to raise_exception(Bunny::NotFound)
+    end
+  end
 
-		context 'should return true if bound' do
+  context '#message_count' do
 
-			it 'by instance' do
+    it 'should return number of messages in queue' do
+      @queue.publish 'First'
+      @queue.publish 'Second'
 
-				@receiver.bind @source
+      expect(@queue.message_count).to eq(2)
 
-				expect(@receiver.bound_to?(@source)).to be_truthy
-			end
+      @queue.pop
 
-			it 'by name' do
+      expect(@queue.message_count).to eq(1)
+    end
+  end
 
-				@receiver.bind @source
+  context '#pop' do
 
-				expect(@receiver.bound_to?(@source.name)).to be_truthy
-			end
+    it 'should return oldest message in queue' do
+      @queue.publish 'First'
+      @queue.publish 'Second'
 
-			it 'by routing key' do
+      expect(@queue.pop[:message]).to eq('First')
+    end
+  end
 
-				@receiver.bind @source, routing_key: 'queue.route'
+  context '#purge' do
 
-				expect(@receiver.bound_to?(@source)).to be_falsey
-				expect(@receiver.bound_to?(@source, routing_key: 'queue.route')).to be_truthy
-			end
-		end
+    it 'should clear all messages' do
+      @queue.publish 'First'
+      @queue.publish 'Second'
 
-		it 'return false otherwise' do
+      @queue.purge
 
-			expect(@receiver.bound_to?(@source)).to be_falsey
-		end
+      expect(@queue.message_count).to eq(0)
+    end
+  end
 
-		it 'should raise error when exchange does not exists' do
+  context '#delete' do
 
-			expect { @receiver.bound_to?('this.xchg.does.not.exist') }.to raise_exception(Bunny::NotFound)
-		end
-	end
+    before do
+      @queue.delete
+    end
 
-	context '#message_count' do
-
-		it 'should return number of messages in queue' do
-
-			@queue.publish 'First'
-			@queue.publish 'Second'
-
-			expect(@queue.message_count).to eq(2)
-
-			@queue.pop
-
-			expect(@queue.message_count).to eq(1)
-		end
-	end
-
-	context '#pop' do
-
-		it 'should return oldest message in queue' do
-
-			@queue.publish 'First'
-			@queue.publish 'Second'
-
-			expect(@queue.pop[:message]).to eq('First')
-		end
-	end
-
-	context '#purge' do
-
-		it 'should clear all messages' do
-
-			@queue.publish 'First'
-			@queue.publish 'Second'
-
-			@queue.purge
-
-			expect(@queue.message_count).to eq(0)
-		end
-	end
-
-	context '#delete' do
-
-		before do
-			@queue.delete
-		end
-
-		it 'should remove queue from session' do
-
-			expect(@session.queue_exists?(@queue.name)).to be_falsey
-		end
-	end
+    it 'should remove queue from session' do
+      expect(@session.queue_exists?(@queue.name)).to be_falsey
+    end
+  end
 end
