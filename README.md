@@ -151,9 +151,9 @@ View the documentation on [RubyDoc](http://www.rubydoc.info/github/arempe93/bunn
 
 ## Dependencies
 
-* Ruby version >= 2.0
-
 * [Bunny](https://github.com/ruby-amqp/bunny) - To use original exception classes
+
+* Ruby version >= 2.0 (A requirement of Bunny)
 
 ## License
 
