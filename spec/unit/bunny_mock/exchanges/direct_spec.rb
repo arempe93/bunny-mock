@@ -15,7 +15,6 @@ describe BunnyMock::Exchanges::Direct do
 		end
 
 		it 'should only deliver to direct route match' do
-
 			@source.publish 'Testing message', routing_key: 'queue.second'
 
 			expect(@first.message_count).to eq(0)

@@ -15,7 +15,6 @@ describe BunnyMock::Exchanges::Fanout do
 		end
 
 		it 'should only deliver to all routes' do
-
 			@source.publish 'Testing message', routing_key: 'queue.second'
 
 			expect(@first.message_count).to eq(1)

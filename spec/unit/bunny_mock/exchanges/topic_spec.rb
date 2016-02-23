@@ -15,7 +15,6 @@ describe BunnyMock::Exchanges::Topic do
 		end
 
 		it 'should deliver with no wildcards' do
-
 			@source.publish 'Testing message', routing_key: 'queue.category.second'
 
 			expect(@first.message_count).to eq(0)
@@ -28,7 +27,6 @@ describe BunnyMock::Exchanges::Topic do
 		context 'should deliver with wildcards' do
 
 			it 'for single wildcards' do
-
 				@source.publish 'Testing message', routing_key: 'queue.*.sub.*'
 
 				expect(@second.message_count).to eq(0)
@@ -41,7 +39,6 @@ describe BunnyMock::Exchanges::Topic do
 			end
 
 			it 'for multiple wildcards' do
-
 				@source.publish 'Testing message', routing_key: 'queue.category.#'
 
 				expect(@third.message_count).to eq(0)
@@ -54,7 +51,6 @@ describe BunnyMock::Exchanges::Topic do
 			end
 
 			it 'for a mixed wildcards' do
-
 				@source.publish 'Testing message', routing_key: '#.sub.*'
 
 				expect(@second.message_count).to eq(0)
