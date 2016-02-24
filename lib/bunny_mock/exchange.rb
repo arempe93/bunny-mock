@@ -228,7 +228,11 @@ module BunnyMock
 
       @routes.key? opts.fetch(:routing_key, route)
     end
-    alias has_binding? routes_to?
+
+    def has_binding?(exchange_or_queue, opts = {}) # rubocop:disable Style/PredicateName
+      warn '[DEPRECATED] `has_binding?` is deprecated. Please use `routes_to?` instead.'
+      routes_to?(exchange_or_queue, opts)
+    end
 
     ##
     # Deliver a message to routes

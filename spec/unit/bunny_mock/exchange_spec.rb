@@ -133,6 +133,12 @@ describe BunnyMock::Exchange do
       expect(@receiver.bound_to?(@source)).to be_falsey
       expect(@source.routes_to?(@receiver)).to be_falsey
     end
+
+    context 'when using #has_binding?' do
+      it 'should output a deprecation warning' do
+        expect { @source.has_binding?(@receiver) }.to output(/DEPRECATED/).to_stderr
+      end
+    end
   end
 
   context '#delete' do
