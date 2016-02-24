@@ -2,31 +2,34 @@
 module BunnyMock
   class Exchange
 
-    ##
-    # Create a new {BunnyMock::Exchange} instance
-    #
-    # @param [BunnyMock::Channel] channel Channel this exchange will use
-    # @param [String] name Name of exchange
-    # @param [Hash] opts Creation options
-    #
-    # @option opts [Boolean] :durable (false) Should this exchange be durable?
-    # @option opts [Boolean] :auto_delete (false) Should this exchange be automatically deleted when it is no longer used?
-    # @option opts [Boolean] :arguments ({}) Additional optional arguments (typically used by RabbitMQ extensions and plugins)
-    #
-    # @return [BunnyMock::Exchange] A new exchange
-    # @see BunnyMock::Channel#exchange
-    # @api public
-    #
-    def self.declare(channel, name = '', opts = {})
+    class << self
 
-      # get requested type
-      type = opts.fetch :type, :direct
+      ##
+      # Create a new {BunnyMock::Exchange} instance
+      #
+      # @param [BunnyMock::Channel] channel Channel this exchange will use
+      # @param [String] name Name of exchange
+      # @param [Hash] opts Creation options
+      #
+      # @option opts [Boolean] :durable (false) Should this exchange be durable?
+      # @option opts [Boolean] :auto_delete (false) Should this exchange be automatically deleted when it is no longer used?
+      # @option opts [Boolean] :arguments ({}) Additional optional arguments (typically used by RabbitMQ extensions and plugins)
+      #
+      # @return [BunnyMock::Exchange] A new exchange
+      # @see BunnyMock::Channel#exchange
+      # @api public
+      #
+      def declare(channel, name = '', opts = {})
 
-      # get needed class type
-      klazz = BunnyMock::Exchanges.const_get type.to_s.capitalize
+        # get requested type
+        type = opts.fetch :type, :direct
 
-      # create exchange of desired type
-      klazz.new channel, name, type, opts
+        # get needed class type
+        klazz = BunnyMock::Exchanges.const_get type.to_s.capitalize
+
+        # create exchange of desired type
+        klazz.new channel, name, type, opts
+      end
     end
 
     #
