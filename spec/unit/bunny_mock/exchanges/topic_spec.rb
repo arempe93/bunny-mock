@@ -22,10 +22,16 @@ describe BunnyMock::Exchanges::Topic do
 
 			expect(@second.message_count).to eq(1)
 			expect(@second.pop[:message]).to eq('Testing message')
-		end
+    end
+
+    it 'does not modify the routing key' do
+      @source.publish 'Testing message',
+                      routing_key: 'queue.category.sub.first'.freeze
+      expect(message = @first.pop).to_not be_nil
+      expect(message[:options][:routing_key]).to eq('queue.category.sub.first')
+    end
 
 		context 'should deliver with wildcards' do
-
 			it 'for single wildcards' do
 				@source.publish 'Testing message', routing_key: 'queue.*.sub.*'
 

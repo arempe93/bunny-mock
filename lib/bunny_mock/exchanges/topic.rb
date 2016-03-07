@@ -27,13 +27,13 @@ module BunnyMock
       def deliver(payload, opts, key)
 
         # escape periods with backslash for regex
-        key.gsub!('.', '\.')
+        key = key.gsub('.', '\.')
 
         # replace single wildcards with regex for a single domain
-        key.gsub!(SINGLE_WILDCARD, '(?:\w+)')
+        key = key.gsub(SINGLE_WILDCARD, '(?:\w+)')
 
         # replace multi wildcards with regex for many domains separated by '.'
-        key.gsub!(MULTI_WILDCARD, '\w+\.?')
+        key = key.gsub(MULTI_WILDCARD, '\w+\.?')
 
         # turn key into regex
         key = Regexp.new(key)
