@@ -137,6 +137,10 @@ To install BunnyMock with RubyGems:
 gem install bunny-mock
 ```
 
+#### Other Features
+
+This gem was made based on my own use of Bunny in a project. If there are other uses for Bunny that this library does not cover (eg. missing methods, functionality), feel free to open an issue or pull request!
+
 #### With Bundler
 
 To use BunnyMock with a Bundler managed project:
