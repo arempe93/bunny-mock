@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'bunny', '~> 2.0'
 
-  s.add_development_dependency 'rake'
+  s.add_development_dependency 'rake', '~> 10.5.0'
   s.add_development_dependency 'rubocop'
   s.add_development_dependency 'yard'
   s.add_development_dependency 'rspec', '~> 3.4.0'
