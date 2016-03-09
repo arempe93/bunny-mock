@@ -243,10 +243,10 @@ module BunnyMock
     ##
     # Deliver a message to routes
     #
-    # @see {BunnyMock::Exchanges::Direct#deliver}
-    # @see {BunnyMock::Exchanges::Topic#deliver}
-    # @see {BunnyMock::Exchanges::Fanout#deliver}
-    # @see {BunnyMock::Exchanges::Headers#deliver}
+    # @see BunnyMock::Exchanges::Direct#deliver
+    # @see BunnyMock::Exchanges::Topic#deliver
+    # @see BunnyMock::Exchanges::Fanout#deliver
+    # @see BunnyMock::Exchanges::Headers#deliver
     # @api public
     #
     def deliver(payload, opts, key)
