@@ -171,6 +171,7 @@ module BunnyMock
     #
     # @option opts [String] :routing_key Custom routing key
     #
+    # @return [BunnyMock::Exchange] self
     # @api public
     #
     def unbind(exchange, opts = {})
@@ -185,6 +186,8 @@ module BunnyMock
         # we need the channel to look up the exchange
         @channel.xchg_unbind opts.fetch(:routing_key, @name), exchange
       end
+
+      self
     end
 
     # @endgroup
