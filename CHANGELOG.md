@@ -1,3 +1,7 @@
+## v1.2.1
+
+* [#5](https://github.com/arempe93/bunny-mock/pull/5): Fixes `routing_key` being modified when delivering in a topic exchange - [@austinmoore](https://github.com/austinmoore)
+
 ## v1.2.0
 
 * Adds `with_channel` functionality to `BunnyMock::Session`
