@@ -26,7 +26,7 @@ describe BunnyMock::Session do
     end
   end
 
-  context '#open?' do
+  context '#open? (connected?)' do
 
     it 'should return true if status is open' do
       @session.start
@@ -45,8 +45,69 @@ describe BunnyMock::Session do
     end
   end
 
-  context '#create_channel (channel)' do
+  describe '#closed?' do
+    context 'with `not_connected` status' do
+      it do
+        expect(@session.closed?).to be_falsey
+      end
+    end
 
+    context 'with `connected` status' do
+      it do
+        @session.start
+        expect(@session.closed?).to be_falsey
+      end
+    end
+
+    context 'with `closing` status' do
+      it do
+        # Mock `closing` status
+        @session.instance_variable_set('@status', :closing)
+        expect(@session.closed?).to be_falsey
+      end
+    end
+
+    context 'with `closed` status' do
+      it do
+        @session.start
+        @session.close
+        expect(@session.closed?).to be_truthy
+      end
+    end
+  end
+
+  describe '#closing?' do
+    context 'with `not_connected` status' do
+      it do
+        expect(@session.closing?).to be_falsey
+      end
+    end
+
+    context 'with `connected` status' do
+      it do
+        @session.start
+        expect(@session.closing?).to be_falsey
+      end
+    end
+
+    context 'with `closing` status' do
+      it do
+        # Mock `closing` status
+        @session.instance_variable_set('@status', :closing)
+        expect(@session.closing?).to be_truthy
+      end
+    end
+
+    context 'with `closed` status' do
+      it do
+        @session.start
+        @session.close
+        expect(@session.closing?).to be_falsey
+      end
+    end
+  end
+
+  context '#create_channel (channel)' do
     it 'should create a new channel with no arguments' do
       first = @session.create_channel
       second = @session.create_channel
