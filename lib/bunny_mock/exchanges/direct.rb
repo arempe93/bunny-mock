@@ -2,7 +2,6 @@
 module BunnyMock
   module Exchanges
     class Direct < BunnyMock::Exchange
-
       #
       # API
       #
@@ -17,7 +16,6 @@ module BunnyMock
       # @api public
       #
       def deliver(payload, opts, key)
-
         @routes[key].publish payload, opts if @routes[key]
       end
     end

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 module BunnyMock
   class Channel
-
     #
     # API
     #
@@ -24,7 +23,6 @@ module BunnyMock
     # @api public
     #
     def initialize(connection = nil, id = nil)
-
       # store channel id
       @id = id
 
@@ -58,7 +56,6 @@ module BunnyMock
     # @api public
     #
     def open
-
       @status = :open
 
       self
@@ -71,7 +68,6 @@ module BunnyMock
     # @api public
     #
     def close
-
       @status = :closed
 
       self
@@ -100,9 +96,7 @@ module BunnyMock
     # @api public
     #
     def exchange(name, opts = {})
-
       xchg = @connection.find_exchange(name) || Exchange.declare(self, name, opts)
-
       @connection.register_exchange xchg
     end
 
@@ -198,9 +192,7 @@ module BunnyMock
     # @api public
     #
     def queue(name = '', opts = {})
-
       queue = @connection.find_queue(name) || Queue.new(self, name, opts)
-
       @connection.register_queue queue
     end
 
@@ -214,7 +206,6 @@ module BunnyMock
     # @api public
     #
     def temporary_queue(opts = {})
-
       queue '', opts.merge(exclusive: true)
     end
 
@@ -236,9 +227,7 @@ module BunnyMock
 
     # @private
     def queue_bind(queue, key, xchg)
-
       exchange = @connection.find_exchange xchg
-
       raise Bunny::NotFound.new("Exchange '#{xchg}' was not found", self, false) unless exchange
 
       exchange.add_route key, queue
@@ -246,9 +235,7 @@ module BunnyMock
 
     # @private
     def queue_unbind(key, xchg)
-
       exchange = @connection.find_exchange xchg
-
       raise Bunny::NotFound.new("Exchange '#{xchg}' was not found", self, false) unless exchange
 
       exchange.remove_route key
@@ -256,9 +243,7 @@ module BunnyMock
 
     # @private
     def xchg_bound_to?(receiver, key, name)
-
       source = @connection.find_exchange name
-
       raise Bunny::NotFound.new("Exchange '#{name}' was not found", self, false) unless source
 
       source.routes_to? receiver, routing_key: key
@@ -266,9 +251,7 @@ module BunnyMock
 
     # @private
     def xchg_routes_to?(key, xchg)
-
       exchange = @connection.find_exchange xchg
-
       raise Bunny::NotFound.new("Exchange '#{xchg}' was not found", self, false) unless exchange
 
       exchange.routes_to? key
@@ -276,9 +259,7 @@ module BunnyMock
 
     # @private
     def xchg_bind(receiver, routing_key, name)
-
       source = @connection.find_exchange name
-
       raise Bunny::NotFound.new("Exchange '#{name}' was not found", self, false) unless source
 
       source.add_route routing_key, receiver
@@ -286,9 +267,7 @@ module BunnyMock
 
     # @private
     def xchg_unbind(routing_key, name)
-
       source = @connection.find_exchange name
-
       raise Bunny::NotFound.new("Exchange '#{name}' was not found", self, false) unless source
 
       source.remove_route routing_key

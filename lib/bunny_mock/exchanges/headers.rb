@@ -2,7 +2,6 @@
 module BunnyMock
   module Exchanges
     class Header < BunnyMock::Exchange
-
       # @private
       # @return [Regexp] Any match
       ANY = /^any$/i
@@ -25,7 +24,6 @@ module BunnyMock
       # @api public
       #
       def deliver(payload, opts, key)
-
         # ~: proper headers exchange implementation
         @routes[key].publish payload, opts if @routes[key]
       end

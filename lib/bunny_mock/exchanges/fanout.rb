@@ -2,7 +2,6 @@
 module BunnyMock
   module Exchanges
     class Fanout < BunnyMock::Exchange
-
       #
       # API
       #
@@ -17,7 +16,6 @@ module BunnyMock
       # @api public
       #
       def deliver(payload, opts, _key)
-
         @routes.each_value { |destination| destination.publish(payload, opts) }
       end
     end

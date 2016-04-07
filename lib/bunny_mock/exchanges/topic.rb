@@ -2,7 +2,6 @@
 module BunnyMock
   module Exchanges
     class Topic < BunnyMock::Exchange
-
       # @private
       # @return [String] Multiple subdomain wildcard
       MULTI_WILDCARD = '#'
@@ -25,7 +24,6 @@ module BunnyMock
       # @api public
       #
       def deliver(payload, opts, key)
-
         # escape periods with backslash for regex
         key = key.gsub('.', '\.')
 

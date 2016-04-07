@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 module BunnyMock
   class Queue
-
     #
     # API
     #
@@ -25,7 +24,6 @@ module BunnyMock
     # @see BunnyMock::Channel#queue
     #
     def initialize(channel, name = '', opts = {})
-
       # Store creation information
       @channel = channel
       @name    = name
@@ -63,7 +61,6 @@ module BunnyMock
     # @api public
     #
     def publish(payload, opts = {})
-
       check_queue_deleted!
 
       # add to messages
@@ -83,14 +80,12 @@ module BunnyMock
     # @api public
     #
     def bind(exchange, opts = {})
-
       check_queue_deleted!
 
       if exchange.respond_to?(:add_route)
 
         # we can do the binding ourselves
         exchange.add_route opts.fetch(:routing_key, @name), self
-
       else
 
         # we need the channel to lookup the exchange
@@ -109,14 +104,12 @@ module BunnyMock
     # @api public
     #
     def unbind(exchange, opts = {})
-
       check_queue_deleted!
 
       if exchange.respond_to?(:remove_route)
 
         # we can do the unbinding ourselves
         exchange.remove_route opts.fetch(:routing_key, @name)
-
       else
 
         # we need the channel to lookup the exchange
@@ -138,14 +131,12 @@ module BunnyMock
     # @api public
     #
     def bound_to?(exchange, opts = {})
-
       check_queue_deleted!
 
       if exchange.respond_to?(:routes_to?)
 
         # we can do the check ourselves
         exchange.routes_to? opts.fetch(:routing_key, @name)
-
       else
 
         # we need the channel to lookup the exchange
@@ -198,9 +189,7 @@ module BunnyMock
     # @api public
     #
     def delete
-
       @channel.deregister_queue self
-
       @deleted = true
     end
 

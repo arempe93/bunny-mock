@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 module BunnyMock
   class Exchange
-
     class << self
-
       ##
       # Create a new {BunnyMock::Exchange} instance
       #
@@ -20,7 +18,6 @@ module BunnyMock
       # @api public
       #
       def declare(channel, name = '', opts = {})
-
         # get requested type
         type = opts.fetch :type, :direct
 
@@ -69,7 +66,6 @@ module BunnyMock
 
     # @private
     def initialize(channel, name, type, opts)
-
       # store creation information
       @channel  = channel
       @name     = name
@@ -117,7 +113,6 @@ module BunnyMock
     # @api public
     #
     def publish(payload, opts = {})
-
       # handle message sending, varies by type
       deliver payload, opts, opts.fetch(:routing_key, '')
 
@@ -130,7 +125,6 @@ module BunnyMock
     # @api public
     #
     def delete(*)
-
       @channel.deregister_exchange self
 
       @deleted = true
@@ -148,12 +142,10 @@ module BunnyMock
     # @api public
     #
     def bind(exchange, opts = {})
-
       if exchange.respond_to?(:add_route)
 
         # we can do the binding ourselves
         exchange.add_route opts.fetch(:routing_key, @name), self
-
       else
 
         # we need the channel to look up the exchange
@@ -175,12 +167,10 @@ module BunnyMock
     # @api public
     #
     def unbind(exchange, opts = {})
-
       if exchange.respond_to?(:remove_route)
 
         # we can do the unbinding ourselves
         exchange.remove_route opts.fetch(:routing_key, @name)
-
       else
 
         # we need the channel to look up the exchange
@@ -204,12 +194,10 @@ module BunnyMock
     # @api public
     #
     def bound_to?(exchange, opts = {})
-
       if exchange.respond_to?(:routes_to?)
 
         # we can find out on the exchange object
         exchange.routes_to? self, opts
-
       else
 
         # we need the channel to look up the exchange
@@ -229,9 +217,7 @@ module BunnyMock
     # @api public
     #
     def routes_to?(exchange_or_queue, opts = {})
-
       route = exchange_or_queue.respond_to?(:name) ? exchange_or_queue.name : exchange_or_queue
-
       @routes.key? opts.fetch(:routing_key, route)
     end
 

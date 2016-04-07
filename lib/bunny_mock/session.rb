@@ -2,7 +2,6 @@
 module BunnyMock
   # Mocks Bunny::Session
   class Session
-
     #
     # API
     #
@@ -21,7 +20,6 @@ module BunnyMock
     #
     # @api public
     def initialize(*)
-
       # not connected until {BunnyMock::Session#start} is called
       @status = :not_connected
 
@@ -39,9 +37,7 @@ module BunnyMock
     # @return [BunnyMock::Session] self
     # @api public
     def start
-
       @status = :connected
-
       self
     end
 
@@ -52,7 +48,6 @@ module BunnyMock
     # @api public
     def stop
       @status = :closed
-
       self
     end
     alias close stop
@@ -94,7 +89,6 @@ module BunnyMock
     # @return [BunnyMock::Channel] Channel instance
     # @api public
     def create_channel(n = nil, _pool_size = 1)
-
       # raise same error as {Bunny::Session#create_channel}
       raise ArgumentError, 'channel number 0 is reserved in the protocol and cannot be used' if n == 0
 
