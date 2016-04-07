@@ -43,10 +43,10 @@ it 'should create queues and exchanges' do
   expect(session.queue_exists?('queue.test')).to be_falsey
 
   xchg = channel.exchange 'xchg.test'
-  expect(session.exchange_exists?('exchange.test')).to be_truthy
+  expect(session.exchange_exists?('xchg.test')).to be_truthy
 
   xchg.delete
-  expect(session.exchange_exists?('exchange.test')).to be_falsey
+  expect(session.exchange_exists?('xchg.test')).to be_falsey
 end
 ```
 
