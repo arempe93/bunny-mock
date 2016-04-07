@@ -8,6 +8,10 @@ Bunny Mock
 
 A mock client for RabbitMQ, modeled after the popular [Bunny client](https://github.com/ruby-amqp/bunny). It currently supports basic usage of Bunny for managing exchanges and queues, with the goal of being able to handle and test all Bunny use cases.
 
+##### Updating
+
+This project does its best to follow [semantic versioning practices](http://semver.org/). Check the [CHANGELOG](CHANGELOG.md) to see detailed versioning notes.
+
 ## Usage
 
 BunnyMock can be injected into your RabbitMQ application in place of Bunny for testing. For example, if you have a helper module named `AMQFactory`, some code similar to the following placed in `spec_helper` or `test_helper` or what have you is all you need to start using BunnyMock to test your RabbitMQ application
