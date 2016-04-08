@@ -123,7 +123,7 @@ it 'should bind exchanges to exchanges' do
 
   receiver.unbind source
   expect(receiver.bound_to?(source)).to be_falsey
-  expect(xchg.routes_to?(receiver)).to be_falsey
+  expect(source.routes_to?(receiver)).to be_falsey
 
   receiver.bind 'xchg.source'
   expect(receiver.bound_to?(source)).to be_truthy
