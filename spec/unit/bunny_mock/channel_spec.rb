@@ -114,6 +114,49 @@ describe BunnyMock::Channel do
 		end
 	end
 
+	context '#basic_publish' do
+		let(:xchg_name) { 'testing.xchg' }
+		let(:key) { 'routing.key' }
+		let(:data) { { some: 'data' } }
+
+		let(:xchg) { @channel.direct xchg_name }
+		let(:queue) { @channel.queue 'testing.queue' }
+
+		before do
+			queue.bind(xchg, routing_key: key)
+		end
+
+		it 'returns BunnyMock::Channel#self' do
+			result = @channel.basic_publish(data, xchg_name, key)
+
+			expect(result).to eq @channel
+		end
+
+		it 'should publish to the exchange' do
+			@channel.basic_publish(data, xchg_name, key)
+
+			expect(queue.pop[:message]).to eq data
+		end
+
+		it 'accepts exchange object for exchange param' do
+			@channel.basic_publish(data, xchg, key)
+
+			expect(queue.pop[:message]).to eq data
+		end
+
+		it 'passes opts down to exchange' do
+			@channel.basic_publish(data, xchg, key, extra: 'opts')
+
+			expect(queue.pop[:options]).to include(extra: 'opts')
+		end
+
+		it 'creates exchange if it does not exist' do
+			@channel.basic_publish(data, 'some.other.xchg', key)
+
+			expect(@channel.exchange('some.other.xchg')).to be_kind_of BunnyMock::Exchange
+		end
+	end
+
 	context '#queue' do
 
 		it 'should declare a new queue' do
