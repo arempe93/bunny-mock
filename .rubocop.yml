@@ -6,4 +6,7 @@ AllCops:
   Exclude:
     - 'spec/**/*'
 
+Metrics/ClassLength:
+  Enabled: false
+
 inherit_from: .rubocop_todo.yml

@@ -1,3 +1,8 @@
+## v1.3.0
+
+* [#12](https://github.com/arempe93/bunny-mock/pull/12): Adds `basic_publish` functionality to `Channel` - [@podung](https://github.com/podung)
+* [#13](https://github.com/arempe93/bunny-mock/pull/13): Add `confirm_select` method stub - [@baelter](https://github.com/baelter)
+
 ## v1.2.2
 
 * [#6](https://github.com/arempe93/bunny-mock/pull/6): Adds more status methods to `Session` - [@syndbg](https://github.com/syndbg)

@@ -301,6 +301,7 @@ module BunnyMock
 
     private
 
+    # @private
     def xchg_find_or_create(name, opts = {})
       @connection.find_exchange(name) || Exchange.declare(self, name, opts)
     end
