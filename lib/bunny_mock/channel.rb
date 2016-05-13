@@ -96,8 +96,7 @@ module BunnyMock
     # @api public
     #
     def exchange(name, opts = {})
-      xchg = @connection.find_exchange(name) || Exchange.declare(self, name, opts)
-      @connection.register_exchange xchg
+      @connection.register_exchange xchg_find_or_create(name, opts)
     end
 
     ##
@@ -176,6 +175,23 @@ module BunnyMock
     #
     def default_exchange
       direct '', no_declare: true
+    end
+
+    ##
+    # Mocks Bunny::Channel#basic_publish
+    #
+    # @param [String] payload Message payload. It will never be modified by Bunny or RabbitMQ in any way.
+    # @param [String] exchange Exchange to publish to
+    # @param [String] routing_key Routing key
+    # @param [Hash] opts Publishing options
+
+    # @return [BunnyMock::Channel] Self
+    def basic_publish(payload, xchg, routing_key, opts = {})
+      xchg = xchg_find_or_create(xchg) unless xchg.respond_to? :name
+
+      xchg.publish payload, opts.merge(routing_key: routing_key)
+
+      self
     end
 
     # @endgroup
@@ -281,6 +297,12 @@ module BunnyMock
       raise Bunny::NotFound.new("Exchange '#{name}' was not found", self, false) unless source
 
       source.remove_route routing_key
+    end
+
+    private
+
+    def xchg_find_or_create(name, opts = {})
+      @connection.find_exchange(name) || Exchange.declare(self, name, opts)
     end
   end
 end
