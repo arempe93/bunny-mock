@@ -209,6 +209,16 @@ module BunnyMock
       queue '', opts.merge(exclusive: true)
     end
 
+    ##
+    # Does nothing atm.
+    #
+    # @return nil
+    # @api public
+    #
+    def confirm_select(callback = nil)
+      # noop
+    end
+
     # @endgroup
 
     #
