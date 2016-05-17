@@ -80,8 +80,8 @@ it 'should route messages from exchanges' do
   xchg = channel.topic 'xchg.topic'
   queue = channel.queue 'queue.test'
 
-  queue.bind xchg
-  xchg.publish 'Routed message', routing_key: '*.test'
+  queue.bind xchg, routing_key: '*.test'
+  xchg.publish 'Routed message', routing_key: 'foo.test'
 
   expect(queue.message_count).to eq(1)
   expect(queue.pop[:message]).to eq('Routed message')

@@ -24,21 +24,19 @@ module BunnyMock
       # @api public
       #
       def deliver(payload, opts, key)
-        # escape periods with backslash for regex
+        delivery_routes = @routes.dup.keep_if { |route, _| key =~ route_to_regex(route) }
+        delivery_routes.values.each { |dest| dest.publish(payload, opts) }
+      end
+
+      private
+
+      # @private
+      def route_to_regex(key)
         key = key.gsub('.', '\.')
-
-        # replace single wildcards with regex for a single domain
         key = key.gsub(SINGLE_WILDCARD, '(?:\w+)')
-
-        # replace multi wildcards with regex for many domains separated by '.'
         key = key.gsub(MULTI_WILDCARD, '\w+\.?')
 
-        # turn key into regex
-        key = Regexp.new(key)
-
-        @routes.each do |route, destination|
-          destination.publish(payload, opts) if route =~ key
-        end
+        Regexp.new(key)
       end
     end
   end

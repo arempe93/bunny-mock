@@ -1,9 +1,9 @@
 describe BunnyMock::Queue, '#pop' do
   let(:queue) { @channel.queue('test.q') }
   let(:exchange) { @channel.topic('test.exchange') }
-  let(:options) { { priority: 1, persistent: true, routing_key: '*.q' } }
+  let(:options) { { priority: 1, persistent: true, routing_key: 'test.q' } }
 
-  before { queue.bind(exchange) }
+  before { queue.bind(exchange, routing_key: '*.q') }
 
   context 'when published through an exchange' do
     before do
@@ -25,11 +25,11 @@ describe BunnyMock::Queue, '#pop' do
   end
 
   context 'when published through many exchanges' do
-    let(:options) { { priority: 1, persistent: true, routing_key: 'test.*' } }
+    let(:options) { { priority: 1, persistent: true, routing_key: 'test.q' } }
 
     before do
       exchange2 = @channel.topic 'test.exchange2'
-      exchange.bind(exchange2)
+      exchange.bind(exchange2, routing_key: 'test.*')
 
       exchange2.publish('Message', options)
       @di, @mp, @pl = queue.pop
