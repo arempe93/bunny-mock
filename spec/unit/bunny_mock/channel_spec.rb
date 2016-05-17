@@ -135,19 +135,19 @@ describe BunnyMock::Channel do
 		it 'should publish to the exchange' do
 			@channel.basic_publish(data, xchg_name, key)
 
-			expect(queue.pop[:message]).to eq data
+			expect(queue.pop[2]).to eq data
 		end
 
 		it 'accepts exchange object for exchange param' do
 			@channel.basic_publish(data, xchg, key)
 
-			expect(queue.pop[:message]).to eq data
+			expect(queue.pop[2]).to eq data
 		end
 
 		it 'passes opts down to exchange' do
 			@channel.basic_publish(data, xchg, key, extra: 'opts')
 
-			expect(queue.pop[:options]).to include(extra: 'opts')
+			expect(queue.pop[1].to_hash).to include(extra: 'opts')
 		end
 
 		it 'creates exchange if it does not exist' do

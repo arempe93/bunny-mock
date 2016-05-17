@@ -10,6 +10,7 @@ require 'coveralls'
 Coveralls.wear!
 
 require 'bunny-mock'
+BunnyMock.use_bunny_queue_pop_api = true
 
 RSpec.configure do |config|
 

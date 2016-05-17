@@ -160,9 +160,15 @@ module BunnyMock
     # @return [Hash] Message data
     # @api public
     #
-    def pop
-      @messages.shift
+    def pop(opts = { manual_ack: false }, &block)
+      if BunnyMock.use_bunny_queue_pop_api
+        bunny_pop(opts, &block)
+      else
+        warn '[DEPRECATED] This behavior is deprecated - please set `BunnyMock::use_bunny_queue_pop_api` to true to use Bunny Queue#pop behavior'
+        @messages.shift
+      end
     end
+    alias get pop
 
     ##
     # Clear all messages in queue
@@ -171,6 +177,8 @@ module BunnyMock
     #
     def purge
       @messages = []
+
+      self
     end
 
     ##
@@ -193,9 +201,27 @@ module BunnyMock
       @deleted = true
     end
 
+    private
+
     # @private
     def check_queue_deleted!
       raise 'Queue has been deleted' if @deleted
+    end
+
+    # @private
+    def bunny_pop(*)
+      response = pop_response(@messages.shift)
+      block_given? ? yield(*response) : response
+    end
+
+    # @private
+    def pop_response(message)
+      return [nil, nil, nil] unless message
+
+      di = GetResponse.new(@channel, self, message[:options])
+      mp = MessageProperties.new(message[:options])
+
+      [di, mp, message[:message]]
     end
   end
 end

@@ -114,7 +114,7 @@ module BunnyMock
     #
     def publish(payload, opts = {})
       # handle message sending, varies by type
-      deliver payload, opts, opts.fetch(:routing_key, '')
+      deliver(payload, opts.merge(exchange: name), opts.fetch(:routing_key, ''))
 
       self
     end

@@ -21,7 +21,7 @@ describe BunnyMock::Exchanges::Direct do
 			expect(@third.message_count).to eq(0)
 
 			expect(@second.message_count).to eq(1)
-			expect(@second.pop[:message]).to eq('Testing message')
+			expect(@second.pop[2]).to eq('Testing message')
 		end
 	end
 end

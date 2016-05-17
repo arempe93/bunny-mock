@@ -21,14 +21,16 @@ describe BunnyMock::Exchanges::Topic do
 			expect(@third.message_count).to eq(0)
 
 			expect(@second.message_count).to eq(1)
-			expect(@second.pop[:message]).to eq('Testing message')
+			expect(@second.pop[2]).to eq('Testing message')
     end
 
     it 'does not modify the routing key' do
       @source.publish 'Testing message',
                       routing_key: 'queue.category.sub.first'.freeze
-      expect(message = @first.pop).to_not be_nil
-      expect(message[:options][:routing_key]).to eq('queue.category.sub.first')
+
+      di, mp, pl = @first.pop
+      expect([di, mp, pl].compact.size).to eql 3
+      expect(mp[:routing_key]).to eql 'queue.category.sub.first'
     end
 
 		context 'should deliver with wildcards' do
@@ -38,10 +40,10 @@ describe BunnyMock::Exchanges::Topic do
 				expect(@second.message_count).to eq(0)
 
 				expect(@first.message_count).to eq(1)
-				expect(@first.pop[:message]).to eq('Testing message')
+				expect(@first.pop[2]).to eq('Testing message')
 
 				expect(@third.message_count).to eq(1)
-				expect(@third.pop[:message]).to eq('Testing message')
+				expect(@third.pop[2]).to eq('Testing message')
 			end
 
 			it 'for multiple wildcards' do
@@ -50,10 +52,10 @@ describe BunnyMock::Exchanges::Topic do
 				expect(@third.message_count).to eq(0)
 
 				expect(@first.message_count).to eq(1)
-				expect(@first.pop[:message]).to eq('Testing message')
+				expect(@first.pop[2]).to eq('Testing message')
 
 				expect(@second.message_count).to eq(1)
-				expect(@second.pop[:message]).to eq('Testing message')
+				expect(@second.pop[2]).to eq('Testing message')
 			end
 
 			it 'for a mixed wildcards' do
@@ -62,10 +64,10 @@ describe BunnyMock::Exchanges::Topic do
 				expect(@second.message_count).to eq(0)
 
 				expect(@first.message_count).to eq(1)
-				expect(@first.pop[:message]).to eq('Testing message')
+				expect(@first.pop[2]).to eq('Testing message')
 
 				expect(@third.message_count).to eq(1)
-				expect(@third.pop[:message]).to eq('Testing message')
+				expect(@third.pop[2]).to eq('Testing message')
 			end
 		end
 	end

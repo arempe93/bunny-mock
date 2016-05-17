@@ -10,7 +10,7 @@ describe BunnyMock::Queue do
       @queue.publish 'This is a test message'
 
       expect(@queue.message_count).to eq(1)
-      expect(@queue.pop[:message]).to eq('This is a test message')
+      expect(@queue.pop[2]).to eq('This is a test message')
       expect(@queue.message_count).to eq(0)
     end
   end
@@ -120,12 +120,47 @@ describe BunnyMock::Queue do
   end
 
   context '#pop' do
+    context 'when using old api' do
+      before { BunnyMock::use_bunny_queue_pop_api = false }
+      after  { BunnyMock::use_bunny_queue_pop_api = true }
 
-    it 'should return oldest message in queue' do
-      @queue.publish 'First'
-      @queue.publish 'Second'
+      it 'should return a Hash' do
+        @queue.publish 'First', priority: 1
+        response = @queue.pop
 
-      expect(@queue.pop[:message]).to eq('First')
+        expect(response[:message]).to eql 'First'
+        expect(response[:options][:priority]).to eql 1
+      end
+
+      it 'should output a deprecation warning' do
+        expect { @queue.pop }.to output(/DEPRECATED/).to_stderr
+      end
+    end
+
+    context 'when using Bunny api' do
+      before { BunnyMock::use_bunny_queue_pop_api = true }
+      after  { BunnyMock::use_bunny_queue_pop_api = false }
+
+      context 'when queue if empty' do
+        it 'should return a nil triplet' do
+          expect(@queue.pop).to eql [nil, nil, nil]
+        end
+      end
+
+      context 'when queue has messages' do
+        before { @queue.publish('First') }
+
+        it 'should return triplet of GetResponse, MessageProperties, and payload' do
+          response = @queue.pop
+          expect(response.map(&:class)).to eql [BunnyMock::GetResponse, BunnyMock::MessageProperties, String]
+        end
+      end
+
+      context 'when using block' do
+        it 'should yield' do
+          expect { |b| @queue.pop(&b) }.to yield_control
+        end
+      end
     end
   end
 

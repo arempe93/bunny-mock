@@ -4,6 +4,9 @@ require 'bunny_mock/version'
 require 'bunny/exceptions'
 require 'amq/protocol/client'
 
+require 'bunny_mock/get_response'
+require 'bunny_mock/message_properties'
+
 require 'bunny_mock/session'
 require 'bunny_mock/channel'
 require 'bunny_mock/exchange'
@@ -24,6 +27,8 @@ module BunnyMock
   PROTOCOL_VERSION = AMQ::Protocol::PROTOCOL_VERSION
 
   class << self
+    attr_writer :use_bunny_queue_pop_api
+
     #
     # API
     #
@@ -36,6 +41,11 @@ module BunnyMock
     def new(*)
       # return new mock session
       BunnyMock::Session.new
+    end
+
+    # @return [Boolean] Use Bunny API for Queue#pop (default: false)
+    def use_bunny_queue_pop_api
+      @use_bunny_queue_pop_api.nil? ? false : @use_bunny_queue_pop_api
     end
 
     # @return [String] Bunny mock version

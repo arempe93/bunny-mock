@@ -18,13 +18,13 @@ describe BunnyMock::Exchanges::Fanout do
 			@source.publish 'Testing message', routing_key: 'queue.second'
 
 			expect(@first.message_count).to eq(1)
-			expect(@first.pop[:message]).to eq('Testing message')
+			expect(@first.pop[2]).to eq('Testing message')
 
 			expect(@second.message_count).to eq(1)
-			expect(@second.pop[:message]).to eq('Testing message')
+			expect(@second.pop[2]).to eq('Testing message')
 
 			expect(@third.message_count).to eq(1)
-			expect(@third.pop[:message]).to eq('Testing message')
+			expect(@third.pop[2]).to eq('Testing message')
 		end
 	end
 end
