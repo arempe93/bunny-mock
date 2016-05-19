@@ -14,9 +14,15 @@ Gem::Specification.new do |s|
   s.description = 'Easy to use mocking for testing the Bunny client for RabbitMQ'
   s.license     = 'MIT'
 
-  s.required_ruby_version = Gem::Requirement.new '>= 2.0'
+  s.required_ruby_version = Gem::Requirement.new '>= 1.9'
 
-  s.add_dependency 'bunny', '~> 2.0'
+  # Bunny is known to work with JRuby 1.7.0, but unsupported after that.
+  # Other Ruby platforms are expected to work on any 1.7.x version or later.
+  if RUBY_PLATFORM == 'java'
+    s.add_dependency 'bunny', '1.7.0'
+  else
+    s.add_dependency 'bunny', '>= 1.7'
+  end
 
   s.add_development_dependency 'rake', '~> 10.5.0'
   s.add_development_dependency 'rubocop'
