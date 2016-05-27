@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = Gem::Requirement.new '>= 1.9'
 
-  # Bunny is known to work with JRuby 1.7.0, but unsupported after that.
+  # Bunny 1.7.0 is known to work with JRuby, but unsupported after that.
   # Other Ruby platforms are expected to work on any 1.7.x version or later.
   if RUBY_PLATFORM == 'java'
     s.add_dependency 'bunny', '1.7.0'
