@@ -1,3 +1,9 @@
+## v1.4.0
+
+* [#19](https://github.com/arempe93/bunny-mock/pull/12): Adds support for JRuby with Bunny 1.7.0 - [@TimothyMDean](https://github.com/TimothyMDean)
+* [#16](https://github.com/arempe93/bunny-mock/issues/16): Fixes wildcard implementation for topic exchanges - [@arempe93](https://github.com/arempe93)
+* [#15](https://github.com/arempe93/bunny-mock/issues/15): Changes to `Queue#pop` api to match Bunny - [@arempe93](https://github.com/arempe93)
+
 ## v1.3.0
 
 * [#12](https://github.com/arempe93/bunny-mock/pull/12): Adds `basic_publish` functionality to `Channel` - [@podung](https://github.com/podung)
