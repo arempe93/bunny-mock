@@ -242,6 +242,7 @@ module BunnyMock
     def yield_consumers
       return if @consumers.nil?
       @consumers.each do |c|
+        # rubocop:disable AssignmentInCondition
         while message = all.pop
           response = pop_response(message)
           c.call(response)
