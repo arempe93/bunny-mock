@@ -65,8 +65,22 @@ module BunnyMock
 
       # add to messages
       @messages << { message: payload, options: opts }
-
+      yield_consumers
       self
+    end
+
+    ##
+    # Subscribe to queue
+    #
+    # All params are ignored atm. Takes a block which is called when a message is delivered
+    # to the queue
+    #
+    # @api public
+    #
+    def subscribe(*_args, &block)
+      @consumers ||= []
+      @consumers << block
+      yield_consumers
     end
 
     ##
@@ -222,6 +236,17 @@ module BunnyMock
       mp = MessageProperties.new(message[:options])
 
       [di, mp, message[:message]]
+    end
+
+    # @private
+    def yield_consumers
+      return if @consumers.nil?
+      @consumers.each do |c|
+        while message = all.pop
+          response = pop_response(message)
+          c.call(response)
+        end
+      end
     end
   end
 end
