@@ -235,6 +235,26 @@ module BunnyMock
       # noop
     end
 
+    ##
+    # Does nothing atm.
+    #
+    # @return nil
+    # @api public
+    #
+    def prefetch(*)
+      # noop
+    end
+
+    ##
+    # Does not actually wait, but always return true.
+    #
+    # @return true
+    # @api public
+    #
+    def wait_for_confirms(*)
+      true
+    end
+
     # @endgroup
 
     #
