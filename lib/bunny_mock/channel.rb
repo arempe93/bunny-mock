@@ -255,6 +255,26 @@ module BunnyMock
       true
     end
 
+    ##
+    # Does nothing atm.
+    #
+    # @return nil
+    # @api public
+    #
+    def acknowledge(*)
+      # noop
+    end
+
+    ##
+    # Does nothing atm.
+    #
+    # @return nil
+    # @api public
+    #
+    def reject(*)
+      # noop
+    end
+
     # @endgroup
 
     #
