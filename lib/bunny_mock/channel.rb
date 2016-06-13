@@ -320,7 +320,7 @@ module BunnyMock
       exchange = @connection.find_exchange xchg
       raise Bunny::NotFound.new("Exchange '#{xchg}' was not found", self, false) unless exchange
 
-      exchange.routes_to? queue, { routing_key: key }
+      exchange.routes_to? queue, routing_key: key
     end
 
     # @private
