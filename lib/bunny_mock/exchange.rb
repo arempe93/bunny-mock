@@ -168,13 +168,11 @@ module BunnyMock
     #
     def unbind(exchange, opts = {})
       if exchange.respond_to?(:remove_route)
-
         # we can do the unbinding ourselves
-        exchange.remove_route opts.fetch(:routing_key, @name)
+        exchange.remove_route opts.fetch(:routing_key, @name), self
       else
-
         # we need the channel to look up the exchange
-        @channel.xchg_unbind opts.fetch(:routing_key, @name), exchange
+        @channel.xchg_unbind opts.fetch(:routing_key, @name), exchange, self
       end
 
       self
@@ -195,7 +193,6 @@ module BunnyMock
     #
     def bound_to?(exchange, opts = {})
       if exchange.respond_to?(:routes_to?)
-
         # we can find out on the exchange object
         exchange.routes_to? self, opts
       else
@@ -218,7 +215,8 @@ module BunnyMock
     #
     def routes_to?(exchange_or_queue, opts = {})
       route = exchange_or_queue.respond_to?(:name) ? exchange_or_queue.name : exchange_or_queue
-      @routes.key? opts.fetch(:routing_key, route)
+      rk = opts.fetch(:routing_key, route)
+      @routes.key?(rk) && @routes[rk].any? { |r| r == exchange_or_queue }
     end
 
     def has_binding?(exchange_or_queue, opts = {}) # rubocop:disable Style/PredicateName
@@ -245,12 +243,17 @@ module BunnyMock
 
     # @private
     def add_route(key, xchg_or_queue)
-      @routes[key] = xchg_or_queue
+      @routes[key] ||= []
+      @routes[key] << xchg_or_queue
     end
 
     # @private
-    def remove_route(key)
-      @routes.delete key
+    def remove_route(key, xchg_or_queue)
+      instance = xchg_or_queue.respond_to?(:name) ? xchg_or_queue.name : xchg_or_queue
+      @routes[key].delete_if do |r|
+        route = r.respond_to?(:name) ? r.name : r
+        route == instance
+      end if @routes.key? key
     end
   end
 end

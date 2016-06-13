@@ -25,7 +25,7 @@ module BunnyMock
       #
       def deliver(payload, opts, key)
         delivery_routes = @routes.dup.keep_if { |route, _| key =~ route_to_regex(route) }
-        delivery_routes.values.each { |dest| dest.publish(payload, opts) }
+        delivery_routes.values.flatten.each { |dest| dest.publish(payload, opts) }
       end
 
       private

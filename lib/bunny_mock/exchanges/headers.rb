@@ -25,7 +25,7 @@ module BunnyMock
       #
       def deliver(payload, opts, key)
         # ~: proper headers exchange implementation
-        @routes[key].publish payload, opts if @routes[key]
+        @routes[key].each { |route| route.publish payload, opts } if @routes[key]
       end
     end
   end

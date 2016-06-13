@@ -16,7 +16,7 @@ module BunnyMock
       # @api public
       #
       def deliver(payload, opts, key)
-        @routes[key].publish payload, opts if @routes[key]
+        @routes[key].each { |route| route.publish payload, opts } if @routes[key]
       end
     end
   end
