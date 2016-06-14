@@ -235,6 +235,46 @@ module BunnyMock
       # noop
     end
 
+    ##
+    # Does nothing atm.
+    #
+    # @return nil
+    # @api public
+    #
+    def prefetch(*)
+      # noop
+    end
+
+    ##
+    # Does not actually wait, but always return true.
+    #
+    # @return true
+    # @api public
+    #
+    def wait_for_confirms(*)
+      true
+    end
+
+    ##
+    # Does nothing atm.
+    #
+    # @return nil
+    # @api public
+    #
+    def acknowledge(*)
+      # noop
+    end
+
+    ##
+    # Does nothing atm.
+    #
+    # @return nil
+    # @api public
+    #
+    def reject(*)
+      # noop
+    end
+
     # @endgroup
 
     #
@@ -260,11 +300,11 @@ module BunnyMock
     end
 
     # @private
-    def queue_unbind(key, xchg)
+    def queue_unbind(queue, key, xchg)
       exchange = @connection.find_exchange xchg
       raise Bunny::NotFound.new("Exchange '#{xchg}' was not found", self, false) unless exchange
 
-      exchange.remove_route key
+      exchange.remove_route key, queue
     end
 
     # @private
@@ -276,11 +316,11 @@ module BunnyMock
     end
 
     # @private
-    def xchg_routes_to?(key, xchg)
+    def xchg_routes_to?(queue, key, xchg)
       exchange = @connection.find_exchange xchg
       raise Bunny::NotFound.new("Exchange '#{xchg}' was not found", self, false) unless exchange
 
-      exchange.routes_to? key
+      exchange.routes_to? queue, routing_key: key
     end
 
     # @private
@@ -292,11 +332,11 @@ module BunnyMock
     end
 
     # @private
-    def xchg_unbind(routing_key, name)
+    def xchg_unbind(routing_key, name, exchange)
       source = @connection.find_exchange name
       raise Bunny::NotFound.new("Exchange '#{name}' was not found", self, false) unless source
 
-      source.remove_route routing_key
+      source.remove_route routing_key, exchange
     end
 
     private

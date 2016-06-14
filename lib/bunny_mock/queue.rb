@@ -65,6 +65,22 @@ module BunnyMock
 
       # add to messages
       @messages << { message: payload, options: opts }
+      yield_consumers
+      self
+    end
+
+    ##
+    # Adds a consumer to the queue (subscribes for message deliveries).
+    #
+    # All params are ignored atm. Takes a block which is called when a message is delivered
+    # to the queue
+    #
+    # @api public
+    #
+    def subscribe(*_args, &block)
+      @consumers ||= []
+      @consumers << block
+      yield_consumers
 
       self
     end
@@ -109,11 +125,11 @@ module BunnyMock
       if exchange.respond_to?(:remove_route)
 
         # we can do the unbinding ourselves
-        exchange.remove_route opts.fetch(:routing_key, @name)
+        exchange.remove_route opts.fetch(:routing_key, @name), self
       else
 
         # we need the channel to lookup the exchange
-        @channel.queue_unbind opts.fetch(:routing_key, @name), exchange
+        @channel.queue_unbind self, opts.fetch(:routing_key, @name), exchange
       end
     end
 
@@ -134,13 +150,11 @@ module BunnyMock
       check_queue_deleted!
 
       if exchange.respond_to?(:routes_to?)
-
         # we can do the check ourselves
-        exchange.routes_to? opts.fetch(:routing_key, @name)
+        exchange.routes_to? self, opts
       else
-
         # we need the channel to lookup the exchange
-        @channel.xchg_routes_to? opts.fetch(:routing_key, @name), exchange
+        @channel.xchg_routes_to? self, opts.fetch(:routing_key, @name), exchange
       end
     end
 
@@ -222,6 +236,18 @@ module BunnyMock
       mp = MessageProperties.new(message[:options])
 
       [di, mp, message[:message]]
+    end
+
+    # @private
+    def yield_consumers
+      return if @consumers.nil?
+      @consumers.each do |c|
+        # rubocop:disable AssignmentInCondition
+        while message = all.pop
+          response = pop_response(message)
+          c.call(response)
+        end
+      end
     end
   end
 end

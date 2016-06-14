@@ -16,7 +16,7 @@ module BunnyMock
       # @api public
       #
       def deliver(payload, opts, _key)
-        @routes.each_value { |destination| destination.publish(payload, opts) }
+        @routes.values.flatten.each { |destination| destination.publish(payload, opts) }
       end
     end
   end
