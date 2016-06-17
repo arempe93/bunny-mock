@@ -1,3 +1,11 @@
+## Next release
+
+_Add contribution here_
+
+## v1.5.0
+
+*[#20](https://github.com/arempe93/bunny-mock/pull/20): Adds implementation of `Queue#subscribe` - [@baelter](https://github.com/baelter)
+
 ## v1.4.0
 
 * [#19](https://github.com/arempe93/bunny-mock/pull/12): Adds support for JRuby with Bunny 1.7.0 - [@TimothyMDean](https://github.com/TimothyMDean)

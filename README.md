@@ -163,7 +163,7 @@ View the documentation on [RubyDoc](http://www.rubydoc.info/github/arempe93/bunn
 
 * [Bunny](https://github.com/ruby-amqp/bunny) - To use original exception classes
 
-* Ruby version >= 2.0 (A requirement of Bunny)
+* ~~Ruby version >= 2.0 (A requirement of Bunny)~~ Now works with other Ruby versions (even JRuby!) thanks to **[@TimothyMDean](https://github.com/TimothyMDean)**
 
 ## License
 
