@@ -26,9 +26,11 @@ Gem::Specification.new do |s|
   end
 
   s.add_development_dependency 'rake', '~> 10.5.0'
-  s.add_development_dependency 'rubocop'
+  s.add_development_dependency 'rubocop', '= 0.40.0'
   s.add_development_dependency 'yard'
   s.add_development_dependency 'rspec', '~> 3.4.0'
+  s.add_development_dependency 'term-ansicolor', '~> 1.3.0'
+  s.add_development_dependency 'tins', '= 1.6.0'
   s.add_development_dependency 'coveralls'
 
   s.files         = `git ls-files`.split "\n"
