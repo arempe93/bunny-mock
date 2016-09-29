@@ -4,11 +4,11 @@ module BunnyMock
     class Topic < BunnyMock::Exchange
       # @private
       # @return [String] Multiple subdomain wildcard
-      MULTI_WILDCARD = '#'
+      MULTI_WILDCARD = '#'.freeze
 
       # @private
       # @return [String] Single subdomain wildcard
-      SINGLE_WILDCARD = '*'
+      SINGLE_WILDCARD = '*'.freeze
 
       #
       # API

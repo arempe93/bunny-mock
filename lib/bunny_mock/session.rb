@@ -90,7 +90,7 @@ module BunnyMock
     # @api public
     def create_channel(n = nil, _pool_size = 1)
       # raise same error as {Bunny::Session#create_channel}
-      raise ArgumentError, 'channel number 0 is reserved in the protocol and cannot be used' if n == 0
+      raise ArgumentError, 'channel number 0 is reserved in the protocol and cannot be used' if n && n.zero?
 
       # return cached channel if exists
       return @channels[n] if n && @channels.key?(n)
