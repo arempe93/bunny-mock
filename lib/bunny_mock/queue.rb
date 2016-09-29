@@ -86,6 +86,22 @@ module BunnyMock
     end
 
     ##
+    # Adds a specific consumer object to the queue (subscribes for message deliveries).
+    #
+    # @param [#call] consumer A subclass of Bunny::Consumer or any callable object
+    # Secondary params are ignored atm.
+    #
+    # @api public
+    #
+    def subscribe_with(consumer, *_args)
+      @consumers ||= []
+      @consumers << consumer
+      yield_consumers
+
+      self
+    end
+
+    ##
     # Bind this queue to an exchange
     #
     # @param [BunnyMock::Exchange,String] exchange Exchange to bind to

@@ -174,6 +174,18 @@ describe BunnyMock::Queue do
     end
   end
 
+  context '#subscribe_with' do
+
+    it 'should consume messages delivered' do
+      consumer = proc do |_delivery, _headers, body|
+        expect(body).to eq('test')
+      end
+    
+      @queue.subscribe_with consumer
+      @queue.publish 'test'
+    end
+  end
+
   context '#purge' do
 
     it 'should clear all messages' do
