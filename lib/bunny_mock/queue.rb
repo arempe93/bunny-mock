@@ -123,6 +123,7 @@ module BunnyMock
         # we need the channel to lookup the exchange
         @channel.queue_bind self, opts.fetch(:routing_key, @name), exchange
       end
+      self
     end
 
     ##
