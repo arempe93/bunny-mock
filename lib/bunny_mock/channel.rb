@@ -178,7 +178,7 @@ module BunnyMock
     # @api public
     #
     def default_exchange
-      default no_declare: true
+      self.connection.default_exchange ||= default(no_declare: true)
     end
 
     ##
