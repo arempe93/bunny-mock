@@ -109,7 +109,7 @@ describe BunnyMock::Channel do
 		it 'should return a nameless direct exchange' do
 			xchg = @channel.default_exchange
 
-			expect(xchg.class).to eq(BunnyMock::Exchanges::Direct)
+			expect(xchg.class).to eq(BunnyMock::Exchanges::Default)
 			expect(xchg.name).to eq('')
 		end
 	end

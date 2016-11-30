@@ -16,6 +16,7 @@ require 'bunny_mock/exchanges/direct'
 require 'bunny_mock/exchanges/topic'
 require 'bunny_mock/exchanges/fanout'
 require 'bunny_mock/exchanges/headers'
+require 'bunny_mock/exchanges/default'
 
 ##
 # A mock RabbitMQ client based on Bunny
