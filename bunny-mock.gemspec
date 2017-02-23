@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
     s.add_dependency 'amq-protocol', '<= 1.9.2'
     s.add_dependency 'bunny', '1.7.0'
   else
-    s.add_dependency 'bunny', '>= 1.7'
+    s.add_dependency 'bunny', '>= 2.6'
   end
 
   s.add_development_dependency 'rake', '~> 10.5.0'
