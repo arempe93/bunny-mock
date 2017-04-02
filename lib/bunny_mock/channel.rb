@@ -261,7 +261,18 @@ module BunnyMock
     # @return nil
     # @api public
     #
-    def acknowledge(*)
+    def ack(*)
+      # noop
+    end
+    alias acknowledge ack
+
+    ##
+    # Does nothing atm.
+    #
+    # @return nil
+    # @api public
+    #
+    def nack(*)
       # noop
     end
 
