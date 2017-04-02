@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'bunny_mock/version'
 
+require 'timeout'
 require 'bunny/exceptions'
 require 'amq/protocol/client'
 
