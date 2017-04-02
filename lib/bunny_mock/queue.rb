@@ -72,14 +72,14 @@ module BunnyMock
     ##
     # Adds a consumer to the queue (subscribes for message deliveries).
     #
-    # All params are ignored atm. Takes a block which is called when a message is delivered
-    # to the queue
+    # Params are so they can be used when the message is processed. Takes a block which is called when a message
+    # is delivered to the queue
     #
     # @api public
     #
-    def subscribe(*_args, &block)
+    def subscribe(*args, &block)
       @consumers ||= []
-      @consumers << block
+      @consumers << [block, args]
       yield_consumers
 
       self
@@ -89,13 +89,13 @@ module BunnyMock
     # Adds a specific consumer object to the queue (subscribes for message deliveries).
     #
     # @param [#call] consumer A subclass of Bunny::Consumer or any callable object
-    # Secondary params are ignored atm.
+    # Secondary params are so they can be used when the message is processed.
     #
     # @api public
     #
-    def subscribe_with(consumer, *_args)
+    def subscribe_with(consumer, *args)
       @consumers ||= []
-      @consumers << consumer
+      @consumers << [consumer, args]
       yield_consumers
 
       self
@@ -257,12 +257,20 @@ module BunnyMock
     # @private
     def yield_consumers
       return if @consumers.nil?
-      @consumers.each do |c|
+      @consumers.each do |c, args|
         # rubocop:disable AssignmentInCondition
         while message = all.pop
           response = pop_response(message)
+          store_acknowledgement(response, args)
           c.call(response)
         end
+      end
+    end
+
+    def store_acknowledgement(response, args)
+      if args[0].is_a?(Hash) && args[0][:manual_ack]
+        delivery_tag = response[0][:delivery_tag]
+        @channel.acknowledged_state[:pending][delivery_tag] = response
       end
     end
   end

@@ -14,6 +14,9 @@ module BunnyMock
     # @return [Symbol] Current channel state
     attr_reader :status
 
+    # @return [Hash] with details of pending, acked and nacked messaged
+    attr_reader :acknowledged_state
+
     ##
     # Create a new {BunnyMock::Channel} instance
     #
@@ -32,6 +35,7 @@ module BunnyMock
       # initialize exchange and queue storage
       @exchanges = {}
       @queues    = {}
+      @acknowledged_state = { pending: {}, acked: {}, nacked: {} }
 
       # set status to opening
       @status = :opening
@@ -256,24 +260,46 @@ module BunnyMock
     end
 
     ##
-    # Does nothing atm.
+    # Acknowledge message.
+    #
+    # @param [Integer] delivery_tag Delivery tag to acknowledge
+    # @param [Boolean] multiple (false) Should all unacknowledged messages up to this be acknowleded as well?
     #
     # @return nil
     # @api public
     #
-    def ack(*)
-      # noop
+    def ack(delivery_tag, multiple = false)
+      if multiple
+        @acknowledged_state[:pending].keys.each do |key|
+          ack(key, false) if key <= delivery_tag
+        end
+      elsif @acknowledged_state[:pending].key?(delivery_tag)
+        update_acknowledgement_state(delivery_tag, :acked)
+      end
+      nil
     end
     alias acknowledge ack
 
     ##
-    # Does nothing atm.
+    # Unacknowledge message.
+    #
+    # @param [Integer] delivery_tag Delivery tag to acknowledge
+    # @param [Boolean] multiple (false) Should all unacknowledged messages up to this be rejected as well?
+    # @param [Boolean] requeue  (false) Should this message be requeued instead of dropping it?
     #
     # @return nil
     # @api public
     #
-    def nack(*)
-      # noop
+    def nack(delivery_tag, multiple = false, requeue = false)
+      if multiple
+        @acknowledged_state[:pending].keys.each do |key|
+          nack(key, false, requeue) if key <= delivery_tag
+        end
+      elsif @acknowledged_state[:pending].key?(delivery_tag)
+        delivery, header, body = update_acknowledgement_state(delivery_tag, :nacked)
+        delivery.queue.publish(body, header.to_hash) if requeue
+      end
+      nil
     end
 
     ##
@@ -355,6 +381,11 @@ module BunnyMock
     # @private
     def xchg_find_or_create(name, opts = {})
       @connection.find_exchange(name) || Exchange.declare(self, name, opts)
+    end
+
+    # @private
+    def update_acknowledgement_state(delivery_tag, new_state)
+      @acknowledged_state[new_state][delivery_tag] = @acknowledged_state[:pending].delete(delivery_tag)
     end
   end
 end
