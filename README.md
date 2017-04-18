@@ -117,6 +117,7 @@ it 'should bind exchanges to exchanges' do
 
   source = channel.exchange 'xchg.source'
   receiver = channel.exchange 'xchg.receiver'
+  xchg = channel.exchange 'xchg.test'
 
   receiver.bind source
   expect(receiver.bound_to?(source)).to be_truthy
