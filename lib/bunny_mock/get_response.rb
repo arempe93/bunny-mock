@@ -14,11 +14,15 @@ module BunnyMock
     # @return [BunnyMock::Channel] Channel the response is from
     attr_reader :channel
 
+    # @return [BunnyMock::Queue] Queue the response is from
+    attr_reader :queue
+
     # @private
     def initialize(channel, queue, opts = {})
       @channel = channel
+      @queue = queue
       @hash = {
-        delivery_tag: '',
+        delivery_tag: self.class.next_delivery_tag,
         redelivered:  false,
         exchange:     opts.fetch(:exchange, ''),
         routing_key:  opts.fetch(:routing_key, queue.name)
@@ -71,6 +75,12 @@ module BunnyMock
     # @return [String] Routing key this message was published with
     def routing_key
       @hash[:routing_key]
+    end
+
+    # @return [Integer] incrementing numerically value to support `#ack` with multiple=true
+    def self.next_delivery_tag
+      @delivery_tag ||= 0
+      @delivery_tag += 1
     end
   end
 end

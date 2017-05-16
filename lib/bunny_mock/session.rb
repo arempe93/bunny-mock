@@ -90,7 +90,7 @@ module BunnyMock
     #
     # @return [BunnyMock::Channel] Channel instance
     # @api public
-    def create_channel(n = nil, _pool_size = 1)
+    def create_channel(n = nil, _pool_size = 1, *_args)
       # raise same error as {Bunny::Session#create_channel}
       raise ArgumentError, 'channel number 0 is reserved in the protocol and cannot be used' if n && n.zero?
 

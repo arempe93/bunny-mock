@@ -2,6 +2,11 @@
 
 _Add contribution here_
 
+## v1.6.0
+
+* [#27](https://github.com/arempe93/bunny-mock/pull/27): Allow `Session#create_channel` to accept additional args - [@eebs](https://github.com/eebs)
+* [#20](https://github.com/arempe93/bunny-mock/pull/30): Adds implementation of `ack` and `nack` - [@dwhenry](https://github.com/dwhenry)
+
 ## v1.5.0
 
 * [#20](https://github.com/arempe93/bunny-mock/pull/20): Adds implementation of `Queue#subscribe` - [@baelter](https://github.com/baelter)

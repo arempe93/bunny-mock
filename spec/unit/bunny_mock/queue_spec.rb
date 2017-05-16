@@ -172,6 +172,27 @@ describe BunnyMock::Queue do
       end
       @queue.publish 'test'
     end
+
+    it 'should create responses with uniq delivery_tags' do
+      delivery_tags = []
+      @queue.subscribe do |delivery, _headers, _body|
+        delivery_tags << delivery[:delivery_tag]
+      end
+      @queue.publish 'test one'
+      @queue.publish 'test two'
+
+      expect(delivery_tags.uniq.count).to eq(2)
+    end
+
+    context 'when `manual_ack` is set to true' do
+
+      it 'should mark the message as unacknowledged on the channel before processing' do
+        @queue.subscribe(manual_ack: true) do |delivery, _headers, _body|
+          expect(@channel.acknowledged_state[:pending]).to include(delivery[:delivery_tag])
+        end
+        @queue.publish 'test'
+      end
+    end
   end
 
   context '#subscribe_with' do
