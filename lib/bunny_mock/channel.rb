@@ -103,6 +103,14 @@ module BunnyMock
       @connection.register_exchange xchg_find_or_create(name, opts)
     end
 
+    # Unique string supposed to be used as a consumer tag.
+    #
+    # @return [String]  Unique string.
+    # @api plugin
+    def generate_consumer_tag(name = 'bunny')
+      "#{name}-#{Time.now.to_i * 1000}-#{Kernel.rand(999_999_999_999)}"
+    end
+
     ##
     # Mocks a fanout exchange
     #
