@@ -35,7 +35,7 @@ module BunnyMock
       # initialize exchange and queue storage
       @exchanges = {}
       @queues    = {}
-      @acknowledged_state = { pending: {}, acked: {}, nacked: {} }
+      @acknowledged_state = { pending: {}, acked: {}, nacked: {}, rejected: {} }
 
       # set status to opening
       @status = :opening
@@ -311,13 +311,21 @@ module BunnyMock
     end
 
     ##
-    # Does nothing atm.
+    # Rejects a message. A rejected message can be requeued or
+    # dropped by RabbitMQ.
+    #
+    # @param [Integer] delivery_tag Delivery tag to reject
+    # @param [Boolean] requeue      Should this message be requeued instead of dropping it?
     #
     # @return nil
     # @api public
     #
-    def reject(*)
-      # noop
+    def reject(delivery_tag, requeue = false)
+      if @acknowledged_state[:pending].key?(delivery_tag)
+        delivery, header, body = update_acknowledgement_state(delivery_tag, :rejected)
+        delivery.queue.publish(body, header.to_hash) if requeue
+      end
+      nil
     end
 
     # @endgroup
