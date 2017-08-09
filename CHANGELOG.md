@@ -2,6 +2,12 @@
 
 _Add contribution here_
 
+## v1.7.0
+
+* [#32](https://github.com/arempe93/bunny-mock/pull/32): Implement reject functionality - [@binaryberry](https://github.com/binaryberry)
+* [#31](https://github.com/arempe93/bunny-mock/pull/31): Add `generate_consumer_tag` to `BunnyMock::Channel` - [@Jakenberg](https://github.com/Jakenberg)
+* [#23](https://github.com/arempe93/bunny-mock/pull/23): Fix queue bind returning an array instead of self - [@fugufish](https://github.com/fugufish)
+
 ## v1.6.0
 
 * [#27](https://github.com/arempe93/bunny-mock/pull/27): Allow `Session#create_channel` to accept additional args - [@eebs](https://github.com/eebs)
