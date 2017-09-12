@@ -15,7 +15,7 @@ describe BunnyMock::Exchange do
     end
 
     it 'should create a header exchange' do
-      expect(BunnyMock::Exchange.declare(@channel, 'testing.xchg', type: :header).class).to eq(BunnyMock::Exchanges::Header)
+      expect(BunnyMock::Exchange.declare(@channel, 'testing.xchg', type: :headers).class).to eq(BunnyMock::Exchanges::Headers)
     end
 
     it 'should default to a direct exchange' do

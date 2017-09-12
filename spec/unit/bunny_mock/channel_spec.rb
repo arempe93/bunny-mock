@@ -97,10 +97,10 @@ describe BunnyMock::Channel do
 		end
 	end
 
-	context '#header' do
+	context '#headers' do
 
 		it 'should declare a new headers exchange' do
-			expect(@channel.header('testing.xchg').class).to eq(BunnyMock::Exchanges::Header)
+			expect(@channel.headers('testing.xchg').class).to eq(BunnyMock::Exchanges::Headers)
 		end
 	end
 

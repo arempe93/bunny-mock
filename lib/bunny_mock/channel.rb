@@ -175,8 +175,8 @@ module BunnyMock
     # @return [BunnyMock::Exchange] Mocked exchange instance
     # @api public
     #
-    def header(name, opts = {})
-      exchange name, opts.merge(type: :header)
+    def headers(name, opts = {})
+      exchange name, opts.merge(type: :headers)
     end
 
     ##
