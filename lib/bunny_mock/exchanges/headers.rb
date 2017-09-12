@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module BunnyMock
   module Exchanges
-    class Header < BunnyMock::Exchange
+    class Headers < BunnyMock::Exchange
       # @private
       # @return [Regexp] Any match
       ANY = /^any$/i
