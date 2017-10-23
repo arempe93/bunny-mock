@@ -15,6 +15,8 @@ module BunnyMock
     # @return [Hash<String, BunnyMock::Queue>] Queues created by this channel
     attr_reader :queues
 
+    attr_accessor :default_exchange
+
     ##
     # Creates a new {BunnyMock::Session} instance
     #

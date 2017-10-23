@@ -145,6 +145,10 @@ module BunnyMock
       exchange name, opts.merge(type: :direct)
     end
 
+    def default(opts = {})
+      exchange '', opts.merge(type: :default)
+    end
+
     ##
     # Mocks a topic exchange
     #
@@ -186,7 +190,7 @@ module BunnyMock
     # @api public
     #
     def default_exchange
-      direct '', no_declare: true
+      self.connection.default_exchange ||= default(no_declare: true)
     end
 
     ##
