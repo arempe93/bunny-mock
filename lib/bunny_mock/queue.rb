@@ -31,6 +31,12 @@ module BunnyMock
 
       # Store messages
       @messages = []
+
+      # Store consumers subsribed to that queue
+      @consumers = []
+
+      # marks if this queue is deleted
+      @deleted = false
     end
 
     # @group Bunny API
@@ -78,7 +84,6 @@ module BunnyMock
     # @api public
     #
     def subscribe(*args, &block)
-      @consumers ||= []
       @consumers << [block, args]
       yield_consumers
 
@@ -94,7 +99,6 @@ module BunnyMock
     # @api public
     #
     def subscribe_with(consumer, *args)
-      @consumers ||= []
       @consumers << [consumer, args]
       yield_consumers
 
@@ -257,7 +261,6 @@ module BunnyMock
 
     # @private
     def yield_consumers
-      return if @consumers.nil?
       @consumers.each do |c, args|
         # rubocop:disable AssignmentInCondition
         while message = all.pop
