@@ -110,5 +110,63 @@ describe BunnyMock::Channel, 'acknowledgement' do
         expect(@channel.acknowledged_state[:pending]).to include(new_delivery_tag)
       end
     end
+
+    context 'when having a dead letter exchange defined' do
+      let(:dlx) { @channel.fanout('test.dlx') }
+      let(:dlq) { @channel.temporary_queue.bind(dlx) }
+      before do
+        dlq
+        queue.opts.merge!(arguments: { 'x-dead-letter-exchange' => dlx.name })
+      end
+
+      it 'should send nacked message to dead letter exchange if specified' do
+        queue.publish 'Message to nack'
+        @channel.nack delivery_tags['Message to nack']
+
+        expect(dlq.message_count).to be 1
+        expect(dlq.pop.last).to eq 'Message to nack'
+      end
+
+      it 'should not send nacked message to dead letter exchange if it is requeued' do
+        queue.publish 'Message to nack'
+        @channel.nack delivery_tags['Message to nack'], false, true
+
+        expect(dlq.message_count).to be 0
+      end
+
+      it 'should send rejected message to dead letter exchange if specified' do
+        queue.publish 'Message to reject'
+        @channel.reject delivery_tags['Message to reject']
+
+        expect(dlq.message_count).to be 1
+        _, properties, message = dlq.pop
+        expect(message).to eq 'Message to reject'
+        xdeath_headers = properties[:headers]['x-death'].first
+        expect(xdeath_headers['count']).to eq 1
+        expect(xdeath_headers['queue']).to eq queue.name
+        expect(xdeath_headers['reason']).to eq 'rejected'
+        expect(xdeath_headers['routing_keys']).to eq [queue.name]
+      end
+
+      it 'should not send rejected message to dead letter exchange if it is requeued' do
+        queue.publish 'Message to reject'
+        @channel.nack delivery_tags['Message to reject'], false, true
+
+        expect(dlq.message_count).to be 0
+      end
+
+      it 'should be possible to overwrite the dead letter routing key' do
+        queue.opts.merge!(arguments: { 'x-dead-letter-exchange' => dlx.name, 'x-dead-letter-routing-key' => 'dl_key' })
+        queue.publish 'Message to reject'
+        @channel.reject delivery_tags['Message to reject']
+
+        expect(dlq.message_count).to be 1
+        delivery_info, headers, payload = dlq.pop
+        expect(payload).to eq 'Message to reject'
+        expect(headers[:routing_key]).to eq 'dl_key'
+        expect(delivery_info[:routing_key]).to eq 'dl_key'
+      end
+
+    end
   end
 end
