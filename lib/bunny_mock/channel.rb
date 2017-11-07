@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module BunnyMock
   class Channel
     #
@@ -278,11 +279,11 @@ module BunnyMock
     #
     def ack(delivery_tag, multiple = false)
       if multiple
-        @acknowledged_state[:pending].keys.each do |key|
+        @acknowledged_state[:pending].each_key do |key|
           ack(key, false) if key <= delivery_tag
         end
       elsif @acknowledged_state[:pending].key?(delivery_tag)
-        update_acknowledgement_state(delivery_tag, :acked)
+        handle_acknowledgement(delivery_tag, :acked)
       end
       nil
     end
@@ -300,12 +301,11 @@ module BunnyMock
     #
     def nack(delivery_tag, multiple = false, requeue = false)
       if multiple
-        @acknowledged_state[:pending].keys.each do |key|
+        @acknowledged_state[:pending].each_key do |key|
           nack(key, false, requeue) if key <= delivery_tag
         end
       elsif @acknowledged_state[:pending].key?(delivery_tag)
-        delivery, header, body = update_acknowledgement_state(delivery_tag, :nacked)
-        delivery.queue.publish(body, header.to_hash) if requeue
+        handle_acknowledgement(delivery_tag, :nacked, requeue)
       end
       nil
     end
@@ -322,8 +322,7 @@ module BunnyMock
     #
     def reject(delivery_tag, requeue = false)
       if @acknowledged_state[:pending].key?(delivery_tag)
-        delivery, header, body = update_acknowledgement_state(delivery_tag, :rejected)
-        delivery.queue.publish(body, header.to_hash) if requeue
+        handle_acknowledgement(delivery_tag, :rejected, requeue)
       end
       nil
     end
@@ -397,6 +396,41 @@ module BunnyMock
     # @private
     def xchg_find_or_create(name, opts = {})
       @connection.find_exchange(name) || Exchange.declare(self, name, opts)
+    end
+
+    # @private
+    def handle_acknowledgement(delivery_tag, new_state, requeue = false)
+      delivery, header, body = update_acknowledgement_state(delivery_tag, new_state)
+      return unless %i(nacked rejected).include?(new_state)
+
+      options = header.to_hash
+      return delivery.queue.publish(body, options) if requeue
+
+      dlx, routing_key = dead_letter_arguments(delivery.queue)
+      return unless dlx
+      options = set_dead_letter_options(options, delivery, routing_key)
+      exchange(dlx).publish(body, options)
+    end
+
+    # @private
+    def set_dead_letter_options(options, delivery, routing_key)
+      (options[:headers] ||= {})['x-death'] = [{
+        'count' => 1,
+        'reason' => 'rejected',
+        'queue' => delivery.queue.name,
+        'time' => Time.now,
+        'exchange' => delivery.exchange,
+        'routing_keys' => [delivery.routing_key]
+      }]
+      options[:routing_key] = routing_key if routing_key
+      options
+    end
+
+    # @private
+    def dead_letter_arguments(queue)
+      arguments = queue.opts[:arguments]
+      return [nil, nil] unless arguments
+      [arguments['x-dead-letter-exchange'], arguments['x-dead-letter-routing-key']]
     end
 
     # @private
