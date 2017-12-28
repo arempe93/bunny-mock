@@ -33,10 +33,10 @@ module BunnyMock
       # @private
       def route_to_regex(key)
         key = key.gsub('.', '\.')
-        key = key.gsub(SINGLE_WILDCARD, '(?:\w+)')
-        key = key.gsub(MULTI_WILDCARD, '\w+\.?')
+        key = key.gsub(SINGLE_WILDCARD, '(?:\w*)')
+        key = key.gsub(MULTI_WILDCARD, '[\w\.]*\.?')
 
-        Regexp.new(key)
+        Regexp.new("^#{key}$")
       end
     end
   end
