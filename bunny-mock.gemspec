@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'term-ansicolor', '~> 1.3.0'
   s.add_development_dependency 'tins', '= 1.6.0'
   s.add_development_dependency 'coveralls'
+  s.add_development_dependency 'pry'
 
   s.files         = `git ls-files`.split "\n"
   s.test_files    = `git ls-files -- spec/*`.split "\n"
