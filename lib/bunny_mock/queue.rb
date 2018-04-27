@@ -23,10 +23,10 @@ module BunnyMock
     #
     # @see BunnyMock::Channel#queue
     #
-    def initialize(channel, name = '', opts = {})
+    def initialize(channel, name = nil, opts = {})
       # Store creation information
       @channel = channel
-      @name    = name
+      @name    = name || random_name
       @opts    = opts
 
       # Store messages
@@ -276,6 +276,11 @@ module BunnyMock
         delivery_tag = response[0][:delivery_tag]
         @channel.acknowledged_state[:pending][delivery_tag] = response
       end
+    end
+    
+    def random_name
+      letters = ('a' .. 'z').to_a
+      (1 .. 15).map { |i| letters[rand(letters.size)] }.join('')
     end
   end
 end

@@ -43,5 +43,30 @@ describe BunnyMock::Exchanges::Topic do
       expect(@second.message_count).to eql 1
       expect(@third.message_count).to eql 0
     end
+    
+    it 'should deliver to the correct queue' do
+      company_queue = @channel.queue
+      company_queue.bind(@source, routing_key: '*.company.*.*')
+      @source.publish('Test', routing_key: '123.company.444.245')
+      expect(company_queue.message_count).to eql 1
+    end
+    
+    it 'should not deliver to the wrong queue' do
+      company_queue = @channel.queue
+      company_queue.bind(@source, routing_key: '*.company.*.*')
+      @source.publish('Test', routing_key: '.user.create.188')
+      expect(company_queue.message_count).to eql 0
+    end
+    
+    it 'should not deliver to the wrong queue when there is another subscription' do
+      company_queue = @channel.queue
+      company_queue.bind(@source, routing_key: '*.company.*.*')
+      
+      user_queue = @channel.queue
+      user_queue.bind(@source, routing_key: '*.user.*.*')
+      
+      @source.publish('Test', routing_key: '.user.create.188')
+      expect(company_queue.message_count).to eql 0
+    end
   end
 end
