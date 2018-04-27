@@ -23,10 +23,10 @@ module BunnyMock
     #
     # @see BunnyMock::Channel#queue
     #
-    def initialize(channel, name = nil, opts = {})
+    def initialize(channel, name = '', opts = {})
       # Store creation information
       @channel = channel
-      @name    = name || random_name
+      @name    = name == '' ? random_name : name
       @opts    = opts
 
       # Store messages

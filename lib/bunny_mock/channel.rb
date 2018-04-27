@@ -219,7 +219,7 @@ module BunnyMock
     # @return [BunnyMock::Queue] Queue that was mocked or looked up
     # @api public
     #
-    def queue(name = nil, opts = {})
+    def queue(name = '', opts = {})
       queue = @connection.find_queue(name) || Queue.new(self, name, opts)
       @connection.register_queue queue
     end
