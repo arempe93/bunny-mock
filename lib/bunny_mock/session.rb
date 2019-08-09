@@ -81,6 +81,15 @@ module BunnyMock
     end
 
     ##
+    # Tests if connection is blocked
+    #
+    # @return [Boolean] true if status is blocked, false otherwise
+    # @api public
+    def blocked?
+      @status == :blocked
+    end
+
+    ##
     # Creates a new {BunnyMock::Channel} instance
     #
     # @param [Integer] n Channel identifier
