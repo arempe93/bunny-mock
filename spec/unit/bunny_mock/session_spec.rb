@@ -107,6 +107,16 @@ describe BunnyMock::Session do
     end
   end
 
+  describe "#blocked?" do
+    it 'should always return false' do
+      @session.start
+      expect(@session.blocked?).to be_falsey
+
+      @session.stop
+      expect(@session.blocked?).to be_falsey
+    end
+  end
+
   context '#create_channel (channel)' do
     it 'should create a new channel with no arguments' do
       first = @session.create_channel
