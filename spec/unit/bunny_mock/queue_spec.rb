@@ -178,6 +178,17 @@ describe BunnyMock::Queue do
       @queue.publish 'test'
     end
 
+    it 'should consume existing messages in order' do
+      @queue.publish '1'
+      @queue.publish '2'
+      expect {|b|
+        @queue.subscribe(&b)
+      }.to yield_successive_args(
+        [a_value, a_value, '1'],
+        [a_value, a_value, '2'],
+      )
+    end
+
     it 'should create responses with uniq delivery_tags' do
       delivery_tags = []
       @queue.subscribe do |delivery, _headers, _body|
