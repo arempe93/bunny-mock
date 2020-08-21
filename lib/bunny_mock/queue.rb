@@ -236,6 +236,16 @@ module BunnyMock
       @deleted = true
     end
 
+    ##
+    # Check if this queue will survive broker restart
+    #
+    # @return [Boolean] true if this queue is durable, false otherwise
+    # @api public
+    #
+    def durable?
+      @opts[:durable] == true
+    end
+
     private
 
     # @private
