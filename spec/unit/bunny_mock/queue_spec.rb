@@ -206,7 +206,7 @@ describe BunnyMock::Queue do
       consumer = proc do |_delivery, _headers, body|
         expect(body).to eq('test')
       end
-    
+
       @queue.subscribe_with consumer
       @queue.publish 'test'
     end
@@ -232,6 +232,22 @@ describe BunnyMock::Queue do
 
     it 'should remove queue from session' do
       expect(@session.queue_exists?(@queue.name)).to be_falsey
+    end
+  end
+
+  context '#durable?' do
+    it 'should return false as default' do
+      expect(@queue.durable?).to be_falsey
+    end
+
+    it 'should return true if is durable' do
+      @durable_queue = @channel.queue 'testing.durable.q', { durable: true }
+      expect(@durable_queue.durable?).to be_truthy
+    end
+
+    it 'should return false if is not durable' do
+      @not_durable_queue = @channel.queue 'testing.not.durable.q', { durable: false }
+      expect(@not_durable_queue.durable?).to be_falsey
     end
   end
 end
