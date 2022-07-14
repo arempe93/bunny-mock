@@ -16,7 +16,8 @@ module BunnyMock
 
     # @return [Hash] with details of pending, acked and nacked messaged
     attr_reader :acknowledged_state
-
+    # @return [Hash<String, Any>] Consumer instances declared on this channel
+    attr_reader :consumers
     ##
     # Create a new {BunnyMock::Channel} instance
     #
@@ -35,6 +36,8 @@ module BunnyMock
       # initialize exchange and queue storage
       @exchanges = {}
       @queues    = {}
+      @consumers = {}
+
       @acknowledged_state = { pending: {}, acked: {}, nacked: {}, rejected: {} }
 
       # set status to opening
@@ -51,6 +54,12 @@ module BunnyMock
     # @api public
     def closed?
       @status == :closed
+    end
+
+    # @return [Boolean] true if there are consumers on this channel
+    # @api public
+    def any_consumers?
+      @consumers.any?
     end
 
     ##
