@@ -22,7 +22,7 @@ module BunnyMock
         type = opts.fetch :type, :direct
 
         # get needed class type
-        klazz = BunnyMock::Exchanges.const_get type.to_s.capitalize
+        klazz = BunnyMock::Exchanges.const_get type.to_s.gsub('-', '_').camelize(:upper)
 
         # create exchange of desired type
         klazz.new channel, name, type, opts
