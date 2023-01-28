@@ -246,7 +246,7 @@ module BunnyMock
     # Takes a block that will be called anytime a message is returned
     # @api publick
     #
-    def on_return=(&block)
+    def on_return(&block)
       @on_return = block
 
       self
