@@ -45,9 +45,6 @@ module BunnyMock
     # @return [Hash] Creation options
     attr_reader :opts
 
-    # @return [Block] Callback when a message cannot be delivered
-    attr_reader :on_return
-
     # @return [Boolean] If the exchange was declared as durable
     attr_reader :durable
     alias durable? durable
@@ -264,8 +261,8 @@ module BunnyMock
 
     # @private
     def handle_return(basic_return, properties, content)
-      if on_return
-        on_return.call(
+      if @on_return
+        @on_return.call(
           basic_return.merge(reply_code: 312, reply_text: 'NO_ROUTE'),
           properties, content
         )
