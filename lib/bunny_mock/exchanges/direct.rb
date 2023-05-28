@@ -16,7 +16,11 @@ module BunnyMock
       # @api public
       #
       def deliver(payload, opts, key)
-        @routes[key].each { |route| route.publish payload, opts } if @routes[key]
+        if @routes[key] && @routes[key].any?
+          @routes[key].each { |route| route.publish payload, opts }
+        elsif opts.fetch(:mandatory, false)
+          handle_return({ exchange: name, routing_key: key }, opts, payload)
+        end
       end
     end
   end

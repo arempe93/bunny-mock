@@ -237,6 +237,18 @@ module BunnyMock
       # noOp
     end
 
+    ##
+    # Register a callback when messages cannot be delivered
+    #
+    # Takes a block that will be called anytime a message is returned
+    # @api publick
+    #
+    def on_return(&block)
+      @on_return = block
+
+      self
+    end
+
     #
     # Implementation
     #
@@ -245,6 +257,16 @@ module BunnyMock
     def add_route(key, xchg_or_queue)
       @routes[key] ||= []
       @routes[key] << xchg_or_queue
+    end
+
+    # @private
+    def handle_return(basic_return, properties, content)
+      if @on_return
+        @on_return.call(
+          basic_return.merge(reply_code: 312, reply_text: 'NO_ROUTE'),
+          properties, content
+        )
+      end
     end
 
     # @private
