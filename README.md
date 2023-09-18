@@ -1,7 +1,6 @@
 Bunny Mock
 ==========
 
-test
 [![Build Status](https://travis-ci.org/arempe93/bunny-mock.svg?branch=master)](https://travis-ci.org/arempe93/bunny-mock)
 [![Gem Version](https://badge.fury.io/rb/bunny-mock.svg)](https://rubygems.org/gems/bunny-mock)
 [![Coverage Status](https://coveralls.io/repos/arempe93/bunny-mock/badge.svg?branch=master&service=github)](https://coveralls.io/github/arempe93/bunny-mock?branch=master)
